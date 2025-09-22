@@ -1,0 +1,2 @@
+node .\packages\node_modules\node-red\red.js -s .\packages\node_modules\node-red\settings.js -u .\data\
+node .\packages\node_modules\node-red\red.js admin hash-pw
