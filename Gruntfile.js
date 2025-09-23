@@ -361,13 +361,6 @@ module.exports = function(grunt) {
                     'CHANGELOG.md'
                 ],
                 tasks: ['copy:build']
-            },
-            playground: {
-                files: [
-                    'playground/ui/**/*.js',
-                    'playground/ui/**/*.css'
-                ],
-                tasks: ['build-playground']
             }
         },
 
@@ -649,32 +642,6 @@ module.exports = function(grunt) {
         }
     });
 
-    // Playground build task
-    grunt.registerTask('build-playground', 'Build playground files', function() {
-        var done = this.async();
-        var spawn = require('child_process').spawn;
-        
-        grunt.log.writeln('🎮 Building Node-RED Playground...');
-        
-        var buildProcess = spawn('node', ['playground/config/build.js'], {
-            stdio: 'inherit',
-            cwd: process.cwd()
-        });
-        
-        buildProcess.on('close', function(code) {
-            if (code === 0) {
-                grunt.log.writeln('✅ Playground build completed successfully');
-                done();
-            } else {
-                grunt.fail.fatal('❌ Playground build failed with code ' + code);
-            }
-        });
-        
-        buildProcess.on('error', function(err) {
-            grunt.fail.fatal('❌ Failed to start playground build: ' + err.message);
-        });
-    });
-
     grunt.registerTask('verifyPackageDependencies', function() {
         var done = this.async();
         var verifyDependencies = require("./scripts/verify-package-dependencies.js");
@@ -746,11 +713,11 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build',
         'Builds editor content',
-        ['clean:build','jsonlint','concat:build','concat:vendor','copy:build','uglify:build','sass:build','attachCopyright','build-playground']);
+        ['clean:build','jsonlint','concat:build','concat:vendor','copy:build','uglify:build','sass:build','attachCopyright']);
 
     grunt.registerTask('build-dev',
         'Developer mode: build dev version',
-        ['clean:build','concat:build','concat:vendor','copy:build','sass:build','setDevEnv','build-playground']);
+        ['clean:build','concat:build','concat:vendor','copy:build','sass:build','setDevEnv']);
 
     grunt.registerTask('dev',
         'Developer mode: run node-red, watch for source changes and build/restart',

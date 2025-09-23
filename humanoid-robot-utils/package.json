@@ -1,0 +1,27 @@
+{
+    "name": "node-red-contrib-humanoid-robot-utils",
+    "version": "0.2.0",
+    "description": "A Node-RED plugin for humanoid robot control using official Editor APIs. Provides emergency stop functionality, robot status monitoring, and control interface through toolbar buttons and sidebar panels.",
+    "dependencies": {},
+    "keywords": [
+        "node-red",
+        "robotics",
+        "humanoid",
+        "emergency-stop",
+        "robot-control",
+        "editor-api",
+        "safety"
+    ],
+    "node-red": {
+        "nodes": {
+            "humanoid-utils": "humanoid-robot-utils.js"
+        }
+    },
+    "author": "Node-RED Robot Utils Team",
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/node-red/node-red-contrib-humanoid-robot-utils",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/node-red/node-red-contrib-humanoid-robot-utils.git"
+    }
+}

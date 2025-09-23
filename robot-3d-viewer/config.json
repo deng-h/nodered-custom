@@ -1,0 +1,49 @@
+{
+    "name": "Robot 3D Viewer Configuration",
+    "version": "0.1.0",
+    "description": "Configuration file for the Robot 3D Viewer Node-RED plugin",
+    "settings": {
+        "threejs": {
+            "version": "r156",
+            "cdnUrl": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r156/three.min.js",
+            "controlsUrl": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r156/controls/OrbitControls.js"
+        },
+        "viewer": {
+            "defaultModel": "robot",
+            "autoRotate": false,
+            "wireframeMode": false,
+            "backgroundColor": "#222222",
+            "cameraPosition": {
+                "x": 5,
+                "y": 5,
+                "z": 5
+            }
+        },
+        "models": {
+            "robot": {
+                "name": "简单机器人",
+                "description": "基础的人形机器人模型"
+            },
+            "cube": {
+                "name": "立方体",
+                "description": "基础几何体 - 立方体"
+            },
+            "sphere": {
+                "name": "球体",
+                "description": "基础几何体 - 球体"
+            },
+            "cylinder": {
+                "name": "圆柱体",
+                "description": "基础几何体 - 圆柱体"
+            }
+        }
+    },
+    "features": [
+        "3D模型显示",
+        "交互式视角控制",
+        "多种预设模型",
+        "自动旋转功能",
+        "线框模式切换",
+        "响应式布局"
+    ]
+}

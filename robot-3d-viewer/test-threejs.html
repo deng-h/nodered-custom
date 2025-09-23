@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js 加载测试</title>
+</head>
+<body>
+    <h1>Three.js 加载测试</h1>
+    <div id="status">正在加载...</div>
+    <div id="test-container" style="width: 400px; height: 300px; border: 1px solid #ccc; margin: 20px 0;"></div>
+    
+    <script>
+        console.log("开始测试 Three.js 加载");
+        
+        // CDN 源列表
+        const cdnUrls = [
+            'https://cdnjs.cloudflare.com/ajax/libs/three.js/r156/three.min.js',
+            'https://unpkg.com/three@0.156.1/build/three.min.js',
+            'https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js',
+            './static/three.min.js'
+        ];
+        
+        let currentIndex = 0;
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+            console.log(message);
+        }
+        
+        function tryLoadThreeJS() {
+            if (currentIndex >= cdnUrls.length) {
+                updateStatus("❌ 所有 Three.js 源都加载失败");
+                return;
+            }
+            
+            updateStatus(`🔄 正在尝试加载: ${cdnUrls[currentIndex]}`);
+            
+            const script = document.createElement('script');
+            script.src = cdnUrls[currentIndex];
+            
+            script.onload = function() {
+                if (window.THREE) {
+                    updateStatus(`✅ Three.js 加载成功! 版本: ${THREE.REVISION}`);
+                    createTestScene();
+                } else {
+                    updateStatus("❌ 脚本加载了但 THREE 对象不可用");
+                    nextSource();
+                }
+            };
+            
+            script.onerror = function() {
+                updateStatus(`❌ 加载失败: ${cdnUrls[currentIndex]}`);
+                nextSource();
+            };
+            
+            document.head.appendChild(script);
+        }
+        
+        function nextSource() {
+            currentIndex++;
+            setTimeout(tryLoadThreeJS, 1000);
+        }
+        
+        function createTestScene() {
+            const container = document.getElementById('test-container');
+            
+            // 创建场景
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+            
+            // 创建相机
+            const camera = new THREE.PerspectiveCamera(75, 400/300, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // 创建渲染器
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(400, 300);
+            container.appendChild(renderer.domElement);
+            
+            // 创建一个旋转的立方体
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            updateStatus("✅ Three.js 测试场景创建成功!");
+        }
+        
+        // 开始加载测试
+        tryLoadThreeJS();
+    </script>
+</body>
+</html>
