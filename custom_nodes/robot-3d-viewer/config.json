@@ -23,18 +23,6 @@
             "robot": {
                 "name": "简单机器人",
                 "description": "基础的人形机器人模型"
-            },
-            "cube": {
-                "name": "立方体",
-                "description": "基础几何体 - 立方体"
-            },
-            "sphere": {
-                "name": "球体",
-                "description": "基础几何体 - 球体"
-            },
-            "cylinder": {
-                "name": "圆柱体",
-                "description": "基础几何体 - 圆柱体"
             }
         }
     },

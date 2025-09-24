@@ -1,0 +1,145 @@
+/* Robot 3D Viewer 样式 */
+.robot-3d-viewer-panel {
+    font-family: Arial, sans-serif;
+}
+
+.robot-3d-viewer-panel h3 {
+    border-bottom: 2px solid #0077be;
+    padding-bottom: 8px;
+}
+
+.viewer-controls {
+    border: 1px solid #ddd;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.viewer-controls label {
+    font-weight: bold;
+    color: #495057;
+}
+
+.viewer-controls select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.toggle-btn.active {
+    transform: scale(0.95);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+#robot-3d-container {
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    transition: border-color 0.3s ease;
+}
+
+#robot-3d-container:hover {
+    border-color: #0077be;
+}
+
+.viewer-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #ddd;
+    font-family: 'Courier New', monospace;
+}
+
+#loading-indicator {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+canvas {
+    display: block;
+    outline: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+canvas:active {
+    cursor: grabbing;
+}
+
+/* 防止3D容器内的文本选择和右键菜单 */
+#robot-3d-container {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* 设置面板样式 */
+.settings-panel {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.settings-header {
+    transition: background-color 0.2s ease;
+}
+
+.settings-header:hover {
+    background: #dee2e6 !important;
+}
+
+.settings-header:active {
+    background: #ced4da !important;
+}
+
+#settings-toggle-icon {
+    transition: transform 0.2s ease;
+}
+
+/* 滑动条样式优化 */
+.slider-group input[type="range"] {
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.slider-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* 紧凑的按钮样式 */
+.red-ui-button.toggle-btn {
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.red-ui-button.toggle-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

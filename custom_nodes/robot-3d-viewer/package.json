@@ -3,7 +3,13 @@
     "version": "0.1.0",
     "description": "A Node-RED plugin for displaying 3D robot models using Three.js in the sidebar. Provides interactive 3D visualization and robot model viewing capabilities.",
     "dependencies": {
-        "three": "^0.156.1"
+        "three": "^0.152.0",
+        "urdf-loader": "^0.12.6"
+    },
+    "scripts": {
+        "build": "node build.js",
+        "build:watch": "node build.js --watch",
+        "dev": "node build.js --watch"
     },
     "keywords": [
         "node-red",
@@ -20,10 +26,5 @@
         }
     },
     "author": "Node-RED Robot 3D Viewer Team",
-    "license": "Apache-2.0",
-    "homepage": "https://github.com/node-red/node-red-contrib-robot-3d-viewer",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/node-red/node-red-contrib-robot-3d-viewer.git"
-    }
+    "license": "Apache-2.0"
 }
