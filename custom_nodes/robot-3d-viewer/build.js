@@ -20,6 +20,7 @@ class Robot3DViewerBuilder {
         // JS模块加载顺序（很重要！）
         this.jsModules = [
             'dependencies.js',
+            'environment.js',
             'annotations.js', 
             'controls.js',
             'scene.js',
@@ -133,6 +134,7 @@ ${css}
         // 按顺序添加每个模块
         const moduleNames = {
             'dependencies.js': '依赖加载模块',
+            'environment.js': '环境增强模块',
             'annotations.js': '注释系统模块', 
             'controls.js': '控制和事件模块',
             'scene.js': '3D场景管理模块',

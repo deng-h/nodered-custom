@@ -16,6 +16,28 @@
     function mainInit() {
         console.log("DEBUG: Starting Robot 3D Viewer initialization");
         
+        // 确保所有必要的函数都已定义
+        if (!window.Robot3DViewer) {
+            console.error("ERROR: Robot3DViewer object not found");
+            return;
+        }
+        
+        // 检查必要的函数
+        if (typeof window.Robot3DViewer.addRobot3DSidebar !== 'function') {
+            console.error("ERROR: addRobot3DSidebar function not found");
+            return;
+        }
+        
+        if (typeof window.Robot3DViewer.setupEventListeners !== 'function') {
+            console.error("ERROR: setupEventListeners function not found");
+            return;
+        }
+        
+        if (typeof window.Robot3DViewer.loadDependencies !== 'function') {
+            console.error("ERROR: loadDependencies function not found");
+            return;
+        }
+        
         window.Robot3DViewer.addRobot3DSidebar();
         window.Robot3DViewer.setupEventListeners();
         
@@ -23,7 +45,11 @@
             // 所有脚本加载成功后的回调
             // 只有当侧边栏可见时才初始化场景
             if ($('#robot-3d-container').is(':visible')) {
-                window.Robot3DViewer.initThreeJSScene();
+                if (typeof window.Robot3DViewer.initThreeJSScene === 'function') {
+                    window.Robot3DViewer.initThreeJSScene();
+                } else {
+                    console.error("ERROR: initThreeJSScene function not found");
+                }
             }
         });
     }

@@ -154,6 +154,371 @@ canvas:active {
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
+/* 透明度控制样式 */
+.transparency-control {
+    background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%);
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.transparency-control .slider-group input[type="range"] {
+    background: linear-gradient(to right, #e3f2fd 0%, #1976d2 100%);
+}
+
+.transparency-control .slider-group input[type="range"]::-webkit-slider-thumb {
+    background: #1976d2;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.transparency-control .slider-group input[type="range"]::-moz-range-thumb {
+    background: #1976d2;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 关节坐标系按钮激活状态 */
+#joint-axes-btn.active {
+    background-color: #17a2b8 !important;
+    color: white;
+    border-color: #138496;
+}
+
+/* 三列按钮布局优化 */
+.viewer-controls .red-ui-button.toggle-btn {
+    font-size: 11px;
+    padding: 4px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Three.js 风格的 GUI 面板样式 */
+#threejs-gui-panel {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.gui-folder {
+    border-bottom: 1px solid #2c2c2c;
+}
+
+.gui-folder:last-child {
+    border-bottom: none;
+}
+
+.gui-folder-title {
+    background: linear-gradient(to bottom, #424242 0%, #383838 100%);
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: normal;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid #2c2c2c;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    font-family: 'Lucida Grande', sans-serif;
+}
+
+.gui-folder-title:hover {
+    background: linear-gradient(to bottom, #4a4a4a 0%, #404040 100%);
+}
+
+.gui-folder-title:active {
+    background: linear-gradient(to bottom, #363636 0%, #2c2c2c 100%);
+}
+
+.gui-folder-content {
+    background: rgba(0, 0, 0, 0.9);
+    max-height: 300px;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.gui-folder-content.collapsed {
+    max-height: 0;
+}
+
+.gui-controller {
+    padding: 4px 8px;
+    border-bottom: 1px solid #2c2c2c;
+    display: flex;
+    align-items: center;
+    min-height: 20px;
+    font-size: 11px;
+    color: #fff;
+    font-family: 'Lucida Grande', sans-serif;
+}
+
+.gui-controller:last-child {
+    border-bottom: none;
+}
+
+.gui-controller:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.gui-controller label {
+    cursor: pointer;
+    color: #fff;
+    font-size: 11px;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gui-controller input[type="checkbox"] {
+    margin: 0;
+    transform: scale(0.9);
+}
+
+.gui-button {
+    background: linear-gradient(to bottom, #4a4a4a 0%, #383838 100%);
+    border: 1px solid #2c2c2c;
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: 'Lucida Grande', sans-serif;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    min-height: 18px;
+}
+
+.gui-button:hover {
+    background: linear-gradient(to bottom, #525252 0%, #404040 100%);
+}
+
+.gui-button:active {
+    background: linear-gradient(to bottom, #363636 0%, #2c2c2c 100%);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.gui-slider-container {
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.gui-label {
+    color: #fff;
+    font-size: 11px;
+    min-width: 60px;
+    font-family: 'Lucida Grande', sans-serif;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.gui-slider {
+    flex: 1;
+    height: 12px;
+    background: #1e1e1e;
+    border: 1px solid #2c2c2c;
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+    margin: 0 4px;
+}
+
+.gui-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(to bottom, #6a6a6a 0%, #4a4a4a 100%);
+    border: 1px solid #2c2c2c;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.gui-slider::-webkit-slider-thumb:hover {
+    background: linear-gradient(to bottom, #727272 0%, #525252 100%);
+}
+
+.gui-slider::-webkit-slider-thumb:active {
+    background: linear-gradient(to bottom, #5a5a5a 0%, #424242 100%);
+}
+
+.gui-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(to bottom, #6a6a6a 0%, #4a4a4a 100%);
+    border: 1px solid #2c2c2c;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.gui-value {
+    color: #aaa;
+    font-size: 11px;
+    min-width: 35px;
+    text-align: right;
+    font-family: 'Lucida Grande', monospace;
+}
+
+/* 关节滑块样式 */
+.joint-slider-item {
+    padding: 2px 0;
+    margin-bottom: 2px;
+}
+
+.joint-slider-item .gui-label {
+    min-width: 80px;
+    font-size: 10px;
+}
+
+.joint-slider-item .gui-slider {
+    margin: 0 4px;
+}
+
+.joint-slider-item .gui-value {
+    min-width: 30px;
+    font-size: 10px;
+}
+
+/* 关节滑块容器滚动条样式 */
+#joint-sliders-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+#joint-sliders-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
+    border-radius: 3px;
+}
+
+#joint-sliders-container::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 3px;
+}
+
+#joint-sliders-container::-webkit-scrollbar-thumb:hover {
+    background: #525252;
+}
+
+/* 主折叠控制样式 */
+.gui-main-header {
+    background: linear-gradient(to bottom, #4a4a4a 0%, #383838 100%);
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid #2c2c2c;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    font-family: 'Lucida Grande', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 3px 3px 0 0;
+}
+
+.gui-main-header:hover {
+    background: linear-gradient(to bottom, #525252 0%, #404040 100%);
+}
+
+.gui-main-header:active {
+    background: linear-gradient(to bottom, #363636 0%, #2c2c2c 100%);
+}
+
+.gui-toggle-icon {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    font-family: monospace;
+}
+
+.gui-main-content {
+    border-radius: 0 0 3px 3px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    max-height: 500px;
+}
+
+.gui-main-content.collapsed {
+    max-height: 0;
+}
+
+.gui-main-content.collapsed .gui-toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* 优化GUI文件夹样式，使其更紧凑 */
+.gui-folder-content {
+    max-height: 200px;
+    transition: max-height 0.2s ease-out;
+}
+
+.gui-folder-content.collapsed {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.gui-controller {
+    padding: 3px 6px;
+    min-height: 16px;
+    font-size: 10px;
+}
+
+.gui-slider-container {
+    gap: 6px;
+}
+
+.gui-label {
+    min-width: 50px;
+    font-size: 10px;
+}
+
+.gui-slider {
+    height: 10px;
+    margin: 0 3px;
+}
+
+.gui-slider::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+}
+
+.gui-value {
+    font-size: 10px;
+    min-width: 30px;
+}
+
+.gui-button {
+    padding: 2px 6px;
+    font-size: 10px;
+    min-height: 16px;
+}
+
+/* 紧凑的关节滑块样式 */
+.joint-slider-item {
+    padding: 1px 0;
+    margin-bottom: 1px;
+}
+
+.joint-slider-item .gui-label {
+    min-width: 60px;
+    font-size: 9px;
+}
+
+.joint-slider-item .gui-slider {
+    margin: 0 3px;
+    height: 8px;
+}
+
+.joint-slider-item .gui-slider::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+}
+
+.joint-slider-item .gui-value {
+    min-width: 25px;
+    font-size: 9px;
+}
 </style>
 <!-- JavaScript Modules -->
 <script type="text/javascript">
@@ -227,9 +592,11 @@ canvas:active {
             loadScript('./static/OrbitControls.js', 'OrbitControls', function() {
                 loadScript('./static/ColladaLoader.js', 'ColladaLoader', function() {
                     loadScript('./static/URDFLoader.js', 'URDFLoader', function() {
-                        console.log("DEBUG: All 3D dependencies (OrbitControls, ColladaLoader, URDFLoader) loaded successfully.");
-                        dependenciesLoaded = true;
-                        callback();
+                        loadEnvironmentScript(function() {
+                            console.log("DEBUG: All 3D dependencies (OrbitControls, ColladaLoader, URDFLoader, Environment) loaded successfully.");
+                            dependenciesLoaded = true;
+                            callback();
+                        });
                     });
                 });
             });
@@ -262,6 +629,32 @@ canvas:active {
         document.head.appendChild(script);
     }
     
+    // 加载环境增强脚本
+    function loadEnvironmentScript(callback) {
+        // 检查是否已加载
+        if (window.Robot3DViewer && window.Robot3DViewer.Environment) {
+            console.log("DEBUG: Environment script is already loaded.");
+            callback();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = './js/environment.js';
+        script.async = false;
+
+        script.onload = function() {
+            console.log("DEBUG: Environment script loaded successfully");
+            callback();
+        };
+
+        script.onerror = function() {
+            console.warn("WARN: Failed to load environment.js, continuing without it");
+            callback(); // 继续执行，不阻塞主要功能
+        };
+
+        document.head.appendChild(script);
+    }
+    
     // 暴露给全局
     window.Robot3DViewer = window.Robot3DViewer || {};
     window.Robot3DViewer.loadDependencies = loadDependencies;
@@ -269,6 +662,203 @@ canvas:active {
     Object.defineProperty(window.Robot3DViewer, 'dependenciesLoaded', {
         get: function() { return dependenciesLoaded; }
     });
+})();
+</script>
+
+<!-- 环境增强模块 -->
+<script type="text/javascript">
+// Robot 3D Viewer - Environment Enhancement
+(function() {
+    "use strict";
+    
+    // 添加雾效到场景
+    function addFogEffect(scene) {
+        // 创建类似webgl_animation_walk的雾效
+        const fogColor = 0xeeeeee; // 灰色雾
+        scene.fog = new THREE.Fog(fogColor, 2, 20);
+        
+        // 设置背景色与雾色一致
+        scene.background = new THREE.Color(fogColor);
+        
+        console.log("DEBUG: Fog effect added to scene");
+        return scene;
+    }
+    
+    // 创建高质量环境贴图生成器
+    function createEnvironmentMap(renderer) {
+        // 创建一个更好的环境天空盒
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        pmremGenerator.compileEquirectangularShader();
+        
+        // 创建一个更真实的渐变环境
+        const scene = new THREE.Scene();
+        const geometry = new THREE.SphereGeometry(50, 64, 32);
+        
+        // 创建更精细的渐变材质
+        const vertexShader = `
+            varying vec3 vWorldPosition;
+            void main() {
+                vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                vWorldPosition = worldPosition.xyz;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            uniform vec3 topColor;
+            uniform vec3 horizonColor;
+            uniform vec3 bottomColor;
+            uniform float offset;
+            uniform float exponent;
+            varying vec3 vWorldPosition;
+            
+            void main() {
+                float h = normalize(vWorldPosition + offset).y;
+                vec3 color;
+                if (h > 0.0) {
+                    color = mix(horizonColor, topColor, pow(h, exponent));
+                } else {
+                    color = mix(horizonColor, bottomColor, pow(-h, exponent * 0.5));
+                }
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+        
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                topColor: { value: new THREE.Color(0x87CEEB) }, // 天蓝色
+                horizonColor: { value: new THREE.Color(0xD3D3D3) }, // 浅灰色
+                bottomColor: { value: new THREE.Color(0x5e5d5d) }, // 深灰色（与雾色一致）
+                offset: { value: 0 },
+                exponent: { value: 0.8 }
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            side: THREE.BackSide
+        });
+        
+        const skybox = new THREE.Mesh(geometry, material);
+        scene.add(skybox);
+        
+        const renderTarget = pmremGenerator.fromScene(scene);
+        pmremGenerator.dispose();
+        
+        return renderTarget.texture;
+    }
+    
+    // 添加环境光遮蔽效果
+    function addAmbientOcclusion(scene) {
+        // 这里可以添加更复杂的环境光遮蔽逻辑
+        // 目前使用简单的环境光设置
+        return scene;
+    }
+    
+    // 添加高质量光影和视觉效果（柔和光照版本）
+    function addVisualEffects(scene, renderer) {
+        // 配置渲染器的高质量设置
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 0.3; // 提高曝光，让整体更亮
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // 强化环境光 - 提供更均匀的基础照明，减少明暗对比
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // 大幅提高环境光
+        scene.add(ambientLight);
+        
+        // 主方向光（降低强度，更柔和）
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5); // 大幅降低主光强度
+        dirLight.position.set(2, 4, 3);
+        dirLight.castShadow = true;
+        
+        // 柔和阴影设置
+        const cam = dirLight.shadow.camera;
+        cam.top = cam.right = 3;
+        cam.bottom = cam.left = -3;
+        cam.near = 2;
+        cam.far = 10;
+        dirLight.shadow.mapSize.set(512, 512); // 降低阴影分辨率，更柔和
+        dirLight.shadow.radius = 5; // 增加阴影模糊半径
+        dirLight.shadow.blurSamples = 8;
+        
+        scene.add(dirLight);
+        
+        // 环绕光源系统 - 在机器人周围放置多个柔和光源
+        const ringLights = [];
+        const numLights = 6; // 6个光源环绕
+        const radius = 4;
+        const height = 2;
+        
+        for (let i = 0; i < numLights; i++) {
+            const angle = (i / numLights) * Math.PI * 2;
+            const x = Math.cos(angle) * radius;
+            const z = Math.sin(angle) * radius;
+            
+            // 柔和的环绕光源
+            const ringLight = new THREE.DirectionalLight(0xffffff, 0.3); // 较弱的强度
+            ringLight.position.set(x, height, z);
+            ringLight.target.position.set(0, 1, 0); // 都指向机器人中心
+            
+            scene.add(ringLight);
+            scene.add(ringLight.target);
+            ringLights.push(ringLight);
+        }
+        
+        // 顶部柔光 - 从上方提供均匀照明
+        const topLight = new THREE.DirectionalLight(0xf5f5f5, 0.8);
+        topLight.position.set(0, 6, 0);
+        topLight.target.position.set(0, 0, 0);
+        scene.add(topLight);
+        scene.add(topLight.target);
+        
+        // 底部反射光 - 模拟地面反射，减少底部阴影
+        const bottomLight = new THREE.DirectionalLight(0xe8e8e8, 0.4);
+        bottomLight.position.set(0, -1, 0);
+        bottomLight.target.position.set(0, 1, 0);
+        scene.add(bottomLight);
+        scene.add(bottomLight.target);
+        
+        // 添加环境效果
+        addFogEffect(scene);
+        
+        console.log("DEBUG: Soft lighting system with ring lights added");
+        return scene;
+    }
+    
+    // 优化材质以获得更好的视觉效果
+    function enhanceMaterials(object) {
+        object.traverse(function(child) {
+            if (child.isMesh && child.material) {
+                // 为标准材质添加环境贴图
+                if (child.material.type === 'MeshStandardMaterial') {
+                    // 调整材质参数以获得更好的视觉效果
+                    child.material.envMapIntensity = 0.5;
+                    
+                    // 根据材质名称或颜色调整参数
+                    const color = child.material.color;
+                    if (color) {
+                        // 如果材质偏向金属色，增加金属度
+                        const brightness = (color.r + color.g + color.b) / 3;
+                        if (brightness < 0.3) {
+                            child.material.metalness = Math.min(child.material.metalness + 0.2, 1.0);
+                            child.material.roughness = Math.max(child.material.roughness - 0.1, 0.1);
+                        }
+                    }
+                }
+            }
+        });
+        
+        return object;
+    }
+    
+    // 暴露函数到全局对象
+    window.Robot3DViewer = window.Robot3DViewer || {};
+    window.Robot3DViewer.Environment = {
+        addFogEffect: addFogEffect,
+        createEnvironmentMap: createEnvironmentMap,
+        addAmbientOcclusion: addAmbientOcclusion,
+        addVisualEffects: addVisualEffects,
+        enhanceMaterials: enhanceMaterials
+    };
 })();
 </script>
 
@@ -283,7 +873,9 @@ canvas:active {
     let jointAnnotations = [];
     let annotationOverlay = null; // div 容器
     let annotationSVG = null;     // svg 容器 (画线)
-
+    // 控制标签距离的参数 - 值越大距离越远
+    const LABEL_DISTANCE_FACTOR = 90; // 增加这个值可以让标签更远
+    
     // 初始化注释 overlay (只需一次)
     function ensureAnnotationOverlay() {
         if (annotationOverlay) return;
@@ -406,6 +998,9 @@ canvas:active {
     function updateAnnotations() {
         if (!window.Robot3DViewer.camera || !window.Robot3DViewer.renderer || !annotationOverlay || jointAnnotations.length === 0) return;
         const rect = window.Robot3DViewer.renderer.domElement.getBoundingClientRect();
+        const centerX = rect.width / 2;  // 容器中心点X
+        const centerY = rect.height / 2; // 容器中心点Y
+        
         jointAnnotations.forEach(ann => {
             if (!ann.jointObject) return;
             const worldPos = new THREE.Vector3();
@@ -422,21 +1017,34 @@ canvas:active {
             ann.lineEl.style.display = visible ? 'block' : 'none';
             if (!visible) return;
 
-            ann.labelEl.style.left = x + 'px';
-            ann.labelEl.style.top = y + 'px';
+            // 计算从容器中心到关节点的方向向量
+            const dirX = x - centerX;
+            const dirY = y - centerY;
+            const distance = Math.sqrt(dirX * dirX + dirY * dirY);
+            
+            // 标准化方向向量
+            let normX = 0;
+            let normY = 0;
+            if (distance > 0) {
+                normX = dirX / distance;
+                normY = dirY / distance;
+            } else {
+                // 如果关节在中心，默认向上放置标签
+                normY = -1;
+            }
+            
+            // 计算标签位置 - 远离关节点一定距离
+            const labelX = x + normX * LABEL_DISTANCE_FACTOR;
+            const labelY = y + normY * LABEL_DISTANCE_FACTOR;
 
-            // 线条起点(关节) -> 终点(标签上方稍偏移)
-            const labelRect = ann.labelEl.getBoundingClientRect();
-            const overlayRect = rect; // 坐标系相同 (absolute 叠在容器上)
-            const labelCenterX = parseFloat(ann.labelEl.style.left);
-            const labelCenterY = parseFloat(ann.labelEl.style.top);
-            const targetX = labelCenterX;
-            const targetY = labelCenterY - labelRect.height * 0.5 - 6; // 上方 6px
+            ann.labelEl.style.left = labelX + 'px';
+            ann.labelEl.style.top = labelY + 'px';
 
+            // 线条从关节点连接到标签
             ann.lineEl.setAttribute('x1', x);
             ann.lineEl.setAttribute('y1', y);
-            ann.lineEl.setAttribute('x2', targetX);
-            ann.lineEl.setAttribute('y2', targetY);
+            ann.lineEl.setAttribute('x2', labelX);
+            ann.lineEl.setAttribute('y2', labelY);
         });
     }
     
@@ -446,6 +1054,7 @@ canvas:active {
     window.Robot3DViewer.updateJointTemperature = updateJointTemperature;
     window.Robot3DViewer.updateAnnotations = updateAnnotations;
 })();
+
 </script>
 
 <!-- 控制和事件模块 -->
@@ -455,80 +1064,111 @@ canvas:active {
     "use strict";
     
     let autoRotate = false;
-    let wireframeMode = false;
+    let showJointAxes = false;
+    let modelTransparency = 1.0;
+    let jointAxesGroup = null;
     
     // 绑定控制按钮事件
     function bindControlEvents() {
-        // 设置面板折叠/展开
-        $('.settings-header').off('click').on('click', function() {
-            const settingsContent = $('#settings-content');
-            const toggleIcon = $('#settings-toggle-icon');
+        // 主折叠控制
+        $('#gui-main-toggle').off('click').on('click', function() {
+            const content = $('#gui-main-content');
+            const icon = $(this).find('.gui-toggle-icon');
             
-            if (settingsContent.is(':visible')) {
-                // 折叠
-                settingsContent.slideUp(200);
-                toggleIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
-                toggleIcon.css('transform', 'rotate(0deg)');
+            if (content.hasClass('collapsed')) {
+                content.removeClass('collapsed');
+                icon.text('▼');
             } else {
-                // 展开
-                settingsContent.slideDown(200);
-                toggleIcon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
-                toggleIcon.css('transform', 'rotate(0deg)');
+                content.addClass('collapsed');
+                icon.text('▶');
+            }
+        });
+        
+        // GUI 文件夹折叠/展开功能
+        $('.gui-folder-title').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const content = $('#' + target);
+            
+            if (content.hasClass('collapsed')) {
+                content.removeClass('collapsed');
+            } else {
+                content.addClass('collapsed');
+            }
+        });
+        
+        // 显示/隐藏模型
+        $('#show-model-checkbox').off('change').on('change', function() {
+            if (window.Robot3DViewer.currentModel) {
+                window.Robot3DViewer.currentModel.visible = this.checked;
+            }
+        });
+        
+        // 显示/隐藏关节坐标系
+        $('#show-joint-axes-checkbox').off('change').on('change', function() {
+            showJointAxes = this.checked;
+            if (showJointAxes) {
+                createJointAxes();
+            } else {
+                removeJointAxes();
             }
         });
         
         // 重置相机按钮
         $('#reset-camera-btn').off('click').on('click', function() {
-            window.Robot3DViewer.camera.position.set(1, 1, 1);
-            window.Robot3DViewer.camera.lookAt(0, 0, 0);
+            if (window.Robot3DViewer.camera) {
+                window.Robot3DViewer.camera.position.set(2, 2, 3);
+                window.Robot3DViewer.camera.lookAt(0, 1, 0);
+            }
             if (window.Robot3DViewer.controls) {
                 window.Robot3DViewer.controls.reset();
             }
-            const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0, 0);   // (x,y,z)
-            const INITIAL_ROBOT_RPY = { roll: -1.98, pitch: -0.411, yaw: -0.96 }; // 角度（弧度制）
-
-            // 应用姿态（roll=X, pitch=Y, yaw=Z，按 XYZ 顺序）
-            window.Robot3DViewer.robot.rotation.set(
-                INITIAL_ROBOT_RPY.roll,
-                INITIAL_ROBOT_RPY.pitch,
-                INITIAL_ROBOT_RPY.yaw,
-                'XYZ'
-            );       
             
-            window.Robot3DViewer.robot.position.add(INITIAL_ROBOT_POSITION);            
-        });
-        
-        // 自动旋转按钮
-        $('#rotate-btn').off('click').on('click', function() {
-            autoRotate = !autoRotate;
-            $(this).toggleClass('active', autoRotate);
-            if (autoRotate) {
-                $(this).css('background-color', '#28a745');
-            } else {
-                $(this).css('background-color', '');
+            // 重置机器人模型姿态
+            if (window.Robot3DViewer.currentModel) {
+                const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0.95, 0);
+                const INITIAL_ROBOT_RPY = { roll: -1.62, pitch: -0.06, yaw: -0.99 };
+
+                window.Robot3DViewer.currentModel.rotation.set(
+                    INITIAL_ROBOT_RPY.roll,
+                    INITIAL_ROBOT_RPY.pitch,
+                    INITIAL_ROBOT_RPY.yaw,
+                    'XYZ'
+                );       
+                
+                window.Robot3DViewer.currentModel.position.copy(INITIAL_ROBOT_POSITION);
+                
+                // 更新滑块值
+                $('#roll-slider').val(INITIAL_ROBOT_RPY.roll);
+                $('#pitch-slider').val(INITIAL_ROBOT_RPY.pitch);
+                $('#yaw-slider').val(INITIAL_ROBOT_RPY.yaw);
+                
+                // 更新显示
+                window.Robot3DViewer.updateRobotPoseFromSliders();
             }
         });
         
-        // 线框模式按钮
-        $('#wireframe-btn').off('click').on('click', function() {
-            wireframeMode = !wireframeMode;
-            $(this).toggleClass('active', wireframeMode);
-            if (wireframeMode) {
-                $(this).css('background-color', '#ffc107');
-            } else {
-                $(this).css('background-color', '');
-            }
-            
-            // 切换所有网格的线框模式
-            window.Robot3DViewer.scene.traverse(function(object) {
-                if (object.isMesh && object.material) {
-                    object.material.wireframe = wireframeMode;
-                }
-            });
+        // 自动旋转复选框
+        $('#auto-rotate-checkbox').off('change').on('change', function() {
+            autoRotate = this.checked;
         });
 
-        // 新增：为所有姿态滑块绑定 input 事件
+        // 透明度滑动条
+        $('#transparency-slider').off('input').on('input', function() {
+            modelTransparency = parseFloat($(this).val());
+            $('#transparency-value').text(modelTransparency.toFixed(1));
+            updateModelTransparency();
+        });
+
+        // 姿态滑块绑定 input 事件
         $('#roll-slider, #pitch-slider, #yaw-slider').off('input').on('input', updateRobotPoseFromSliders);
+
+        // 关节控制 - 添加按钮绑定
+        $('#add-joint-btn').off('click').on('click', function() {
+            const name = $('#joint-name-input').val().trim();
+            if (!name) return;
+            addJointSlider(name);
+            $('#joint-name-input').val('');
+        });
     }
     
     // 更新机器人姿态
@@ -546,10 +1186,411 @@ canvas:active {
         // 'XYZ' 是欧拉角的旋转顺序，对于 RPY 通常是这个顺序
         window.Robot3DViewer.currentModel.rotation.set(roll, pitch, yaw, 'XYZ');
 
-        // 更新UI显示的度数 (弧度 * 180 / PI)
-        $('#roll-value').text((roll * 180 / Math.PI).toFixed(1) + '°');
-        $('#pitch-value').text((pitch * 180 / Math.PI).toFixed(1) + '°');
-        $('#yaw-value').text((yaw * 180 / Math.PI).toFixed(1) + '°');
+        // 更新UI显示的弧度值（保持3位小数）
+        $('#roll-value').text(roll.toFixed(3));
+        $('#pitch-value').text(pitch.toFixed(3));
+        $('#yaw-value').text(yaw.toFixed(3));
+    }
+
+    // 查找 URDF Joint 对象（名字包含）
+    function findJointByName(name) {
+        if (!window.Robot3DViewer || !window.Robot3DViewer.currentModel) return null;
+        let found = null;
+        // 首先尝试直接从 URDFLoader 的 joints 字典中查找（如果存在）
+        try {
+            const loader = window.Robot3DViewer.currentModel.userData && window.Robot3DViewer.currentModel.userData.urdfLoader;
+            if (loader && loader.joints && loader.joints[name]) {
+                return loader.joints[name];
+            }
+        } catch (e) {
+            // ignore
+        }
+
+        // 回退到遍历对象树名称包含匹配
+        window.Robot3DViewer.currentModel.traverse(obj => {
+            if (found) return;
+            if (obj.name && obj.name.toLowerCase().includes(name.toLowerCase())) {
+                found = obj;
+            }
+        });
+        return found;
+    }
+
+    // 设置命名关节的角度（弧度），返回是否成功
+    function setJointByName(name, angle) {
+        if (!window.Robot3DViewer || !window.Robot3DViewer.currentModel) return false;
+        // 优先使用 URDFLoader 的 setJointValue 接口
+        try {
+            const loader = window.Robot3DViewer.currentModel.userData && window.Robot3DViewer.currentModel.userData.urdfLoader;
+            if (loader && typeof loader.setJointValue === 'function') {
+                // 直接尝试按精确名称设置
+                if (loader.joints && loader.joints[name]) {
+                    return loader.setJointValue(name, angle);
+                }
+            }
+        } catch (e) {
+            // ignore
+        }
+
+        // 回退到查找对象并设置 quaternion/rotation（适用于简单模型）
+        const jointObj = findJointByName(name);
+        if (!jointObj) return false;
+        try {
+            // 如果是 URDFJoint 实例（含 setJointValue），优先调用
+            if (typeof jointObj.setJointValue === 'function') {
+                return jointObj.setJointValue(angle);
+            }
+            // 否则直接设置 rotation.z (常见关节轴)
+            jointObj.rotation.z = angle;
+            return true;
+        } catch (e) {
+            console.warn('setJointByName failed for', name, e);
+            return false;
+        }
+    }
+
+    // 添加一个关节滑块到容器
+    function addJointSlider(jointName) {
+        const container = document.getElementById('joint-sliders-container');
+        if (!container) return;
+        // 防止重复
+        if (container.querySelector(`[data-joint-name="${escapeSelector(jointName)}"]`)) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'gui-controller gui-slider-container joint-slider-item';
+        wrapper.setAttribute('data-joint-name', jointName);
+
+        const label = document.createElement('label');
+        label.className = 'gui-label';
+        label.textContent = jointName;
+
+        const input = document.createElement('input');
+        input.type = 'range';
+        input.className = 'gui-slider';
+        input.min = -3.14159;
+        input.max = 3.14159;
+        input.step = 0.01;
+        input.value = 0;
+
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'gui-value';
+        valueSpan.textContent = '0.0';
+
+        // 查找 joint 初始角度
+        const jointObj = findJointByName(jointName);
+        if (jointObj) {
+            let initial = 0;
+            if (jointObj.jointValue && Array.isArray(jointObj.jointValue)) initial = jointObj.jointValue[0] || 0;
+            else if (typeof jointObj.rotation !== 'undefined') initial = jointObj.rotation.z || 0;
+            input.value = initial;
+            valueSpan.textContent = initial.toFixed(2);
+        }
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(valueSpan);
+        container.appendChild(wrapper);
+
+        // 节流：限制调用频率
+        let last = 0;
+        input.addEventListener('input', function() {
+            const now = Date.now();
+            const ang = parseFloat(this.value);
+            valueSpan.textContent = ang.toFixed(2);
+            if (now - last < 40) return; // 简单节流
+            last = now;
+            setJointByName(jointName, ang);
+        });
+
+        // 双击滑块移除
+        wrapper.addEventListener('dblclick', function() {
+            container.removeChild(wrapper);
+        });
+    }
+
+    // 转义属性选择器中的字符串
+    function escapeSelector(s) {
+        return s.replace(/"/g, '\\"').replace(/\]/g, '\\]');
+    }
+
+    // ===== JointState 文件解析与播放引擎 =====
+    let jointStateFrames = []; // 每帧: {name:[], position:[]}
+    let playIndex = 0;
+    let playTimer = null;
+    let playRateHz = 20; // 默认 20Hz
+
+    // 解析文本（支持由用户上传的txt，文件采用类似 sensor_msgs/JointState 的 YAML-ish 导出或多帧分隔 '---'）
+    function parseJointStateText(text) {
+        const frames = [];
+        // 简单按 '---' 分帧
+        const parts = text.split(/^---$/m);
+        parts.forEach(part => {
+            const trimmed = part.trim();
+            if (!trimmed) return;
+            try {
+                // 尝试把 YAML-like 转成 JSON 结构：一个非常宽松的解析器
+                // 我们只需要 name: [..] 和 position: [..]
+                const namesMatch = trimmed.match(/name:\s*\n([\s\S]*?)\n(?:velocity|position|effort|$)/);
+                const posMatch = trimmed.match(/position:\s*\[([^\]]*)\]/);
+                let names = [];
+                if (namesMatch) {
+                    const block = namesMatch[1];
+                    // 每行以 - 开头
+                    const lines = block.split(/\n/).map(l=>l.trim()).filter(Boolean);
+                    lines.forEach(l=>{
+                        const m = l.match(/^-\s*(.*)$/);
+                        if (m) names.push(m[1].trim());
+                    });
+                } else {
+                    // 有些导出会是 name: [a,b,c]
+                    const oneLineNames = trimmed.match(/name:\s*\[([^\]]*)\]/);
+                    if (oneLineNames) {
+                        names = oneLineNames[1].split(',').map(s=>s.replace(/['\"]+/g,'').trim()).filter(Boolean);
+                    }
+                }
+
+                const positions = [];
+                if (posMatch) {
+                    positions.push(...posMatch[1].split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v)));
+                } else {
+                    // 回退到查找 position: 后的多行数组或单行方括号
+                    const posBlock = trimmed.match(/position:\s*\n([\s\S]*?)\n(?:velocity|effort|$)/);
+                    if (posBlock) {
+                        const lines = posBlock[1].split(/\n/).map(l=>l.trim()).filter(Boolean);
+                        lines.forEach(l=>{
+                            const m = l.match(/^-\s*(.*)$/);
+                            if (m) {
+                                const v = parseFloat(m[1]);
+                                if (!isNaN(v)) positions.push(v);
+                            }
+                        });
+                    }
+                }
+
+                if (names.length && positions.length) {
+                    frames.push({name: names, position: positions});
+                }
+            } catch (e) {
+                console.warn('Failed to parse jointstate part', e);
+            }
+        });
+        return frames;
+    }
+
+    function playJointStateFrames(frames, rateHz) {
+        if (!frames || !frames.length) return;
+        stopPlay();
+        jointStateFrames = frames;
+        playIndex = 0;
+        const interval = 1000 / (rateHz || playRateHz);
+        playTimer = setInterval(()=>{
+            if (playIndex >= jointStateFrames.length) { stopPlay(); return; }
+            const frame = jointStateFrames[playIndex++];
+            applyJointStateFrame(frame);
+        }, interval);
+    }
+
+    function stopPlay() {
+        if (playTimer) {
+            clearInterval(playTimer);
+            playTimer = null;
+        }
+    }
+
+    function pausePlay() {
+        stopPlay();
+    }
+
+    function applyJointStateFrame(frame) {
+        if (!frame || !frame.name || !frame.position) return;
+        for (let i=0;i<frame.name.length;i++) {
+            const n = frame.name[i];
+            const p = frame.position[i];
+            if (typeof p === 'number') {
+                setJointByName(n, p);
+            }
+        }
+    }
+
+    // 绑定文件上传与播放按钮
+    function bindJointStateFileControls() {
+        const input = document.getElementById('jointstate-file-input');
+        const playBtn = document.getElementById('jointstate-play-btn');
+        const pauseBtn = document.getElementById('jointstate-pause-btn');
+
+        if (!input) return;
+        input.addEventListener('change', function(e){
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const text = ev.target.result;
+                try {
+                    const frames = parseJointStateText(text);
+                    window.Robot3DViewer._parsedJointStateFrames = frames; // debug
+                    console.log('Parsed frames:', frames.length);
+                } catch (e) {
+                    console.error('Failed to parse jointstate file', e);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        if (playBtn) playBtn.addEventListener('click', function(){
+            const frames = (window.Robot3DViewer && window.Robot3DViewer._parsedJointStateFrames) || jointStateFrames;
+            if (!frames || !frames.length) { console.warn('No parsed frames to play'); return; }
+            playJointStateFrames(frames, playRateHz);
+        });
+        if (pauseBtn) pauseBtn.addEventListener('click', function(){ pausePlay(); });
+    }
+
+    // 自动绑定（如果 DOM 元素已存在）
+    setTimeout(bindJointStateFileControls, 500);
+
+    // ===== 关节坐标系显示功能 =====
+    
+    // 创建关节坐标系
+    function createJointAxes() {
+        if (!window.Robot3DViewer.currentModel || !window.Robot3DViewer.scene) return;
+        
+        // 移除旧的坐标系
+        removeJointAxes();
+        
+        // 创建坐标系组
+        jointAxesGroup = new THREE.Group();
+        jointAxesGroup.name = 'JointAxesGroup';
+        
+        // 遍历机器人模型，为每个关节创建坐标系
+        window.Robot3DViewer.currentModel.traverse(function(child) {
+            if (child.isObject3D && child.name && (
+                child.name.includes('joint') || 
+                child.name.includes('Joint') ||
+                child.name.includes('link') ||
+                child.name.includes('Link') ||
+                (child.children && child.children.length > 0)
+            )) {
+                createAxesHelper(child);
+            }
+        });
+        
+        window.Robot3DViewer.scene.add(jointAxesGroup);
+        console.log('关节坐标系已创建');
+    }
+    
+    // 移除关节坐标系
+    function removeJointAxes() {
+        if (jointAxesGroup && window.Robot3DViewer.scene) {
+            window.Robot3DViewer.scene.remove(jointAxesGroup);
+            // 清理几何体和材质
+            jointAxesGroup.traverse(function(child) {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(material => material.dispose());
+                    } else {
+                        child.material.dispose();
+                    }
+                }
+            });
+            jointAxesGroup = null;
+        }
+    }
+    
+    // 为指定对象创建坐标系辅助器
+    function createAxesHelper(object) {
+        if (!object || !jointAxesGroup) return;
+        
+        const axesLength = 0.1; // 坐标系轴长度
+        const axesGroup = new THREE.Group();
+        
+        // 创建X轴（红色）
+        const xGeometry = new THREE.CylinderGeometry(0.002, 0.002, axesLength);
+        const xMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const xAxis = new THREE.Mesh(xGeometry, xMaterial);
+        xAxis.rotation.z = -Math.PI / 2;
+        xAxis.position.x = axesLength / 2;
+        
+        // X轴箭头
+        const xArrowGeometry = new THREE.ConeGeometry(0.005, 0.02);
+        const xArrow = new THREE.Mesh(xArrowGeometry, xMaterial);
+        xArrow.rotation.z = -Math.PI / 2;
+        xArrow.position.x = axesLength;
+        
+        // 创建Y轴（绿色）
+        const yGeometry = new THREE.CylinderGeometry(0.002, 0.002, axesLength);
+        const yMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const yAxis = new THREE.Mesh(yGeometry, yMaterial);
+        yAxis.position.y = axesLength / 2;
+        
+        // Y轴箭头
+        const yArrowGeometry = new THREE.ConeGeometry(0.005, 0.02);
+        const yArrow = new THREE.Mesh(yArrowGeometry, yMaterial);
+        yArrow.position.y = axesLength;
+        
+        // 创建Z轴（蓝色）
+        const zGeometry = new THREE.CylinderGeometry(0.002, 0.002, axesLength);
+        const zMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        const zAxis = new THREE.Mesh(zGeometry, zMaterial);
+        zAxis.rotation.x = Math.PI / 2;
+        zAxis.position.z = axesLength / 2;
+        
+        // Z轴箭头
+        const zArrowGeometry = new THREE.ConeGeometry(0.005, 0.02);
+        const zArrow = new THREE.Mesh(zArrowGeometry, zMaterial);
+        zArrow.rotation.x = Math.PI / 2;
+        zArrow.position.z = axesLength;
+        
+        // 将所有轴添加到组中
+        axesGroup.add(xAxis, xArrow, yAxis, yArrow, zAxis, zArrow);
+        
+        // 将坐标系定位到对象的世界位置
+        const worldPosition = new THREE.Vector3();
+        object.getWorldPosition(worldPosition);
+        axesGroup.position.copy(worldPosition);
+        
+        // 复制对象的世界旋转
+        const worldQuaternion = new THREE.Quaternion();
+        object.getWorldQuaternion(worldQuaternion);
+        axesGroup.quaternion.copy(worldQuaternion);
+        
+        jointAxesGroup.add(axesGroup);
+    }
+    
+    // ===== 模型透明度控制功能 =====
+    
+    // 更新模型透明度
+    function updateModelTransparency() {
+        if (!window.Robot3DViewer.currentModel) return;
+        
+        window.Robot3DViewer.currentModel.traverse(function(child) {
+            if (child.isMesh && child.material) {
+                // 处理数组材质
+                if (Array.isArray(child.material)) {
+                    child.material.forEach(function(material) {
+                        setMaterialTransparency(material, modelTransparency);
+                    });
+                } else {
+                    setMaterialTransparency(child.material, modelTransparency);
+                }
+            }
+        });
+    }
+    
+    // 设置材质透明度
+    function setMaterialTransparency(material, transparency) {
+        if (!material) return;
+        
+        // 启用透明度
+        material.transparent = transparency < 1.0;
+        material.opacity = transparency;
+        
+        // 如果完全不透明，禁用透明度以提高性能
+        if (transparency >= 1.0) {
+            material.transparent = false;
+        }
+        
+        // 标记材质需要更新
+        material.needsUpdate = true;
     }
     
     // 设置事件监听器
@@ -618,8 +1659,19 @@ canvas:active {
     window.Robot3DViewer.setupEventListeners = setupEventListeners;
     window.Robot3DViewer.setupBasicMouseControls = setupBasicMouseControls;
     window.Robot3DViewer.updateRobotPoseFromSliders = updateRobotPoseFromSliders;
+    window.Robot3DViewer.setJointByName = setJointByName;
+    window.Robot3DViewer.addJointSlider = addJointSlider;
+    window.Robot3DViewer.createJointAxes = createJointAxes;
+    window.Robot3DViewer.removeJointAxes = removeJointAxes;
+    window.Robot3DViewer.updateModelTransparency = updateModelTransparency;
     Object.defineProperty(window.Robot3DViewer, 'autoRotate', {
         get: function() { return autoRotate; }
+    });
+    Object.defineProperty(window.Robot3DViewer, 'showJointAxes', {
+        get: function() { return showJointAxes; }
+    });
+    Object.defineProperty(window.Robot3DViewer, 'modelTransparency', {
+        get: function() { return modelTransparency; }
     });
 })();
 </script>
@@ -634,7 +1686,6 @@ canvas:active {
     let scene, camera, renderer, controls;
     let currentModel = null;
     let animationId = null;
-    let robot = null;
     
     function initThreeJSScene() {
         if (!window.Robot3DViewer.dependenciesLoaded) {
@@ -665,21 +1716,19 @@ canvas:active {
             }
         }
         
-        // 创建场景
+        // 创建场景（背景将由环境模块设置）
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xaaaaaa);
         
         // 创建相机
         const containerRect = container.getBoundingClientRect();
-        camera = new THREE.PerspectiveCamera(75, containerRect.width / containerRect.height, 0.1, 1000);
-        camera.position.set(1, 1, 1);
-        camera.lookAt(0, 0, 0);
+        camera = new THREE.PerspectiveCamera(45, containerRect.width / containerRect.height, 0.1, 1000);
+        camera.position.set(2, 2, 3);
+        camera.lookAt(0, 1, 0);
         
-        // 创建渲染器
+        // 创建渲染器（高质量设置将由environment模块配置）
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
         renderer.setSize(containerRect.width, containerRect.height);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
         
         // 阻止浏览器默认的鼠标事件
@@ -700,14 +1749,23 @@ canvas:active {
             return false;
         });
         
-        // 添加轨道控制器（如果可用）
+        // 添加轨道控制器（如果可用）- 使用webgl_animation_walk的控制风格
         if (THREE.OrbitControls) {
             controls = new THREE.OrbitControls(camera, canvas);
+            controls.target.set(0, 1, 0);
             controls.enableDamping = true;
-            controls.dampingFactor = 0.25;
-            controls.enablePan = true;
+            controls.dampingFactor = 0.05;
+            controls.enablePan = false; // 禁用平移，更像webgl_animation_walk
             controls.enableZoom = true;
             controls.enableRotate = true;
+            
+            // 关键：限制垂直旋转角度，防止拖到地面以下
+            const PI90 = Math.PI / 2;
+            controls.maxPolarAngle = PI90 - 0.05; // 几乎垂直但不能到地面以下
+            
+            // 设置距离范围
+            controls.minDistance = 2;
+            controls.maxDistance = 20;
             
             // 自定义鼠标按键映射
             controls.mouseButtons = {
@@ -722,7 +1780,9 @@ canvas:active {
                 TWO: THREE.TOUCH.DOLLY_PAN
             };
             
-            console.log("DEBUG: OrbitControls configured with custom mouse mapping");
+            controls.update();
+            
+            console.log("DEBUG: OrbitControls configured with webgl_animation_walk style settings");
         } else {
             console.warn("OrbitControls not available, using basic camera");
             // 手动实现基础的鼠标控制
@@ -731,6 +1791,16 @@ canvas:active {
         
         // 添加光源
         setupLighting();
+        
+        // 添加环境增强效果
+        if (window.Robot3DViewer && window.Robot3DViewer.Environment) {
+            try {
+                window.Robot3DViewer.Environment.addVisualEffects(scene, renderer);
+                console.log("DEBUG: Visual effects added");
+            } catch (e) {
+                console.warn("Failed to add visual effects:", e);
+            }
+        }
         
         // 创建模型
         createRobotModel();
@@ -747,37 +1817,50 @@ canvas:active {
         console.log("DEBUG: Three.js scene initialized with custom mouse controls");
     }
     
-    // 设置光源
+    // 设置光源和地面（简化版，主要光源由environment.js处理）
     function setupLighting() {
-        // 环境光
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-        scene.add(ambientLight);
+        // 添加地面（类似webgl_animation_walk的风格）
+        const size = 200;
+        const repeat = 16;
         
-        // 主光源
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 10, 5);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 1024;
-        directionalLight.shadow.mapSize.height = 1024;
-        scene.add(directionalLight);
+        // 创建地面纹理（使用程序生成的棋盘格纹理）
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 512;
+        const context = canvas.getContext('2d');
         
-        // 补充光源
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-        fillLight.position.set(-10, -10, -5);
-        scene.add(fillLight);
+        // 绘制棋盘格图案
+        const tileSize = 32;
+        for (let x = 0; x < canvas.width; x += tileSize) {
+            for (let y = 0; y < canvas.height; y += tileSize) {
+                const isEven = (Math.floor(x / tileSize) + Math.floor(y / tileSize)) % 2 === 0;
+                context.fillStyle = isEven ? '#f5f5f5' : '#888888';
+                context.fillRect(x, y, tileSize, tileSize);
+            }
+        }
         
-        // 添加地面
-        /*const groundGeometry = new THREE.PlaneGeometry(10, 10);
-        const groundMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0xf0f0f0,
-            transparent: true,
-            opacity: 0.8
+        const floorTexture = new THREE.CanvasTexture(canvas);
+        floorTexture.colorSpace = THREE.SRGBColorSpace;
+        floorTexture.repeat.set(repeat, repeat);
+        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+        floorTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            map: floorTexture,
+            color: 0x404040,
+            roughness: 0.85,
+            metalness: 0.1,
+            depthWrite: false
         });
+        
+        const groundGeometry = new THREE.PlaneGeometry(size, size, 50, 50);
+        groundGeometry.rotateX(-Math.PI / 2);
+        
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2; // 旋转90度使其水平
-        ground.position.y = -1; // 稍微下移，让机器人站在上面
-        ground.receiveShadow = true; // 接收阴影
-        scene.add(ground);*/
+        ground.receiveShadow = true;
+        ground.position.y = -0.01;
+        scene.add(ground);
+        
+        console.log("DEBUG: Ground and accent lighting setup complete");
     }
     
     function createRobotModel() {
@@ -817,8 +1900,27 @@ canvas:active {
                 const center = box.getCenter(new THREE.Vector3());
                 robot.position.sub(center);
                 
-                const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0, 0);   // (x,y,z)
-                const INITIAL_ROBOT_RPY = { roll: -1.98, pitch: -0.411, yaw: -0.96 }; // 角度（弧度制）
+                // 打造金属质感和硬质装甲效果
+                robot.traverse(function(child) {
+                    if (child.isMesh) {
+                        // 启用阴影投射和接收
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                
+                // 应用环境增强材质效果
+                if (window.Robot3DViewer && window.Robot3DViewer.Environment) {
+                    try {
+                        window.Robot3DViewer.Environment.enhanceMaterials(robot);
+                        console.log("DEBUG: Material enhancements applied");
+                    } catch (e) {
+                        console.warn("Failed to enhance materials:", e);
+                    }
+                }
+                
+                const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0.95, 0);   // 稍微抬高让机器人站在地面上
+                const INITIAL_ROBOT_RPY = { roll: -1.62, pitch: 0.0, yaw: -0.99 }; // 角度（弧度制）
 
                 // 应用姿态（roll=X, pitch=Y, yaw=Z，按 XYZ 顺序）
                 robot.rotation.set(
@@ -832,6 +1934,15 @@ canvas:active {
 
                 scene.add(robot);
                 currentModel = robot;
+                // 保存 loader 引用到模型和全局，供外部控制使用（例如按名称设置关节值）
+                try {
+                    robot.userData = robot.userData || {};
+                    robot.userData.urdfLoader = loader;
+                    window.Robot3DViewer = window.Robot3DViewer || {};
+                    window.Robot3DViewer.urdfLoader = loader;
+                } catch (e) {
+                    console.warn('Failed to attach urdfLoader to model/userData', e);
+                }
                  // 新增：加载模型后，将滑块的初始值与模型的初始姿态同步
                 $('#roll-slider').val(INITIAL_ROBOT_RPY.roll);
                 $('#pitch-slider').val(INITIAL_ROBOT_RPY.pitch);
@@ -840,6 +1951,14 @@ canvas:active {
                 // 新增：调用一次更新函数，来设置模型的初始姿态和UI显示
                 window.Robot3DViewer.updateRobotPoseFromSliders();                   
                 $('#loading-indicator').hide();
+                
+                // 显示 Three.js 风格的GUI面板
+                $('#threejs-gui-panel').show();
+
+                // 如果关节坐标系显示已启用，重新创建坐标系
+                if (window.Robot3DViewer.showJointAxes) {
+                    window.Robot3DViewer.createJointAxes();
+                }
 
                 // 假设关节名包含 HAND_L（需与模型节点名称匹配，可调试 console 输出）
                 window.Robot3DViewer.addJointAnnotation('HAND_L', 42.3);
@@ -890,11 +2009,29 @@ canvas:active {
     function onWindowResize() {
         const container = document.getElementById('robot-3d-container');
         if (!container || !camera || !renderer) return;
-        
+
         const containerRect = container.getBoundingClientRect();
-        camera.aspect = containerRect.width / containerRect.height;
+        // 防止高度或宽度为0（隐藏或未布局完成）导致的异常
+        const width = Math.max(1, Math.floor(containerRect.width));
+        const height = Math.max(1, Math.floor(containerRect.height));
+
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        renderer.setSize(containerRect.width, containerRect.height);
+
+        // 同步 canvas 的样式尺寸和渲染器尺寸，确保绘制区域真实可见
+        const canvas = renderer.domElement;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setSize(width, height, false);
+
+        // 立即触发一次渲染，避免在某些浏览器/情况下留下黑屏
+        try {
+            renderer.render(scene, camera);
+        } catch (e) {
+            console.warn('Renderer render failed during resize:', e);
+        }
     }
     
     // 暴露给全局
@@ -917,7 +2054,7 @@ canvas:active {
         get: function() { return currentModel; }
     });
     Object.defineProperty(window.Robot3DViewer, 'robot', {
-        get: function() { return robot; }
+        get: function() { return currentModel; }
     });
 })();
 </script>
@@ -936,63 +2073,104 @@ canvas:active {
                     机器人状态
                 </h3>
                 
-                <!-- 可折叠的设置面板 -->
-                <div class="settings-panel" style="margin-bottom: 15px;">
-                    <div class="settings-header" style="background: #e9ecef; border-radius: 4px; padding: 8px 12px; cursor: pointer; border: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: bold; color: #495057;">
-                            <i class="fa fa-cog" style="margin-right: 6px;"></i>
-                            设置
-                        </span>
-                        <i id="settings-toggle-icon" class="fa fa-chevron-up" style="color: #6c757d; transition: transform 0.2s;"></i>
-                    </div>
-                    
-                    <div id="settings-content" style="background: #f8f9fa; border: 1px solid #ddd; border-top: none; border-radius: 0 0 4px 4px; padding: 15px; display: none;">
-                        <!-- 视图控制 -->
-                        <div class="viewer-controls" style="margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <span style="font-weight: bold; color: #555; font-size: 13px;">视图控制</span>
-                                <button id="reset-camera-btn" class="red-ui-button" style="font-size: 12px; padding: 4px 8px;">
-                                    <i class="fa fa-refresh"></i> 重置视角
-                                </button>
-                            </div>
-                            
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <button id="rotate-btn" class="red-ui-button toggle-btn" style="flex: 1; margin-right: 5px; font-size: 12px;">
-                                    <i class="fa fa-repeat"></i> 自动旋转
-                                </button>
-                                <button id="wireframe-btn" class="red-ui-button toggle-btn" style="flex: 1; margin-left: 5px; font-size: 12px;">
-                                    <i class="fa fa-object-group"></i> 线框模式
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 姿态控制 -->
-                        <div class="pose-controls">
-                            <div style="font-weight: bold; color: #555; margin-bottom: 10px; font-size: 13px;">姿态控制 (RPY)</div>
-                            <div class="slider-group" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <label for="roll-slider" style="width: 45px; font-size: 11px; color: #666;">Roll</label>
-                                <input type="range" id="roll-slider" min="-3.14159" max="3.14159" step="0.01" value="0.5" style="flex: 1; margin: 0 8px;">
-                                <span id="roll-value" style="width: 45px; text-align: right; font-size: 11px; font-family: monospace; color: #666;">0.0°</span>
-                            </div>
-                            <div class="slider-group" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <label for="pitch-slider" style="width: 45px; font-size: 11px; color: #666;">Pitch</label>
-                                <input type="range" id="pitch-slider" min="-3.14159" max="3.14159" step="0.01" value="1.57" style="flex: 1; margin: 0 8px;">
-                                <span id="pitch-value" style="width: 45px; text-align: right; font-size: 11px; font-family: monospace; color: #666;">0.0°</span>
-                            </div>
-                            <div class="slider-group" style="display: flex; align-items: center;">
-                                <label for="yaw-slider" style="width: 45px; font-size: 11px; color: #666;">Yaw</label>
-                                <input type="range" id="yaw-slider" min="-3.14159" max="3.14159" step="0.01" value="0" style="flex: 1; margin: 0 8px;">
-                                <span id="yaw-value" style="width: 45px; text-align: right; font-size: 11px; font-family: monospace; color: #666;">0.0°</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- 3D渲染区域 -->
                 <div id="robot-3d-container" style="flex: 1; border: 2px solid #ddd; border-radius: 4px; background: #000; position: relative; min-height: 300px;">
                     <div id="loading-indicator" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
                         <i class="fa fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
                         <div>加载3D模型中...</div>
+                    </div>
+                    
+                    <!-- Three.js 风格的右上角GUI设置面板 -->
+                    <div id="threejs-gui-panel" style="position: absolute; top: 10px; right: 10px; width: 240px; font-family: 'Lucida Grande', sans-serif; font-size: 11px; z-index: 1000; display: none;">
+                        <!-- 主控制折叠按钮 -->
+                        <div class="gui-main-header" id="gui-main-toggle">
+                            <span>Robot Controls</span>
+                            <span class="gui-toggle-icon">▼</span>
+                        </div>
+                        
+                        <!-- 主内容区域（默认折叠） -->
+                        <div id="gui-main-content" class="gui-main-content collapsed">
+                            <!-- Visibility Controls -->
+                            <div class="gui-folder">
+                                <div class="gui-folder-title" data-target="gui-visibility">Visibility</div>
+                                <div class="gui-folder-content collapsed" id="gui-visibility">
+                                    <div class="gui-controller">
+                                        <label><input type="checkbox" id="show-model-checkbox" checked> show model</label>
+                                    </div>
+                                    <div class="gui-controller">
+                                        <label><input type="checkbox" id="show-joint-axes-checkbox"> show joint axes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- View Controls -->
+                            <div class="gui-folder">
+                                <div class="gui-folder-title" data-target="gui-view-controls">View Controls</div>
+                                <div class="gui-folder-content collapsed" id="gui-view-controls">
+                                    <div class="gui-controller">
+                                        <button id="reset-camera-btn" class="gui-button">reset camera</button>
+                                    </div>
+                                    <div class="gui-controller">
+                                        <label><input type="checkbox" id="auto-rotate-checkbox"> auto rotate</label>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- Model Properties -->
+                            <div class="gui-folder">
+                                <div class="gui-folder-title" data-target="gui-model-properties">Model Properties</div>
+                                <div class="gui-folder-content collapsed" id="gui-model-properties">
+                                    <div class="gui-controller gui-slider-container">
+                                        <label class="gui-label">transparency</label>
+                                        <input type="range" id="transparency-slider" min="0.1" max="1" step="0.05" value="1" class="gui-slider">
+                                        <span class="gui-value" id="transparency-value">1.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pose Controls -->
+                            <div class="gui-folder">
+                                <div class="gui-folder-title" data-target="gui-pose-controls">Pose Controls</div>
+                                <div class="gui-folder-content collapsed" id="gui-pose-controls">
+                                    <div class="gui-controller gui-slider-container">
+                                        <label class="gui-label">roll</label>
+                                        <input type="range" id="roll-slider" min="-3.14159" max="3.14159" step="0.01" value="-1.62" class="gui-slider">
+                                        <span class="gui-value" id="roll-value">-1.62</span>
+                                    </div>
+                                    <div class="gui-controller gui-slider-container">
+                                        <label class="gui-label">pitch</label>
+                                        <input type="range" id="pitch-slider" min="-3.14159" max="3.14159" step="0.01" value="-0.06" class="gui-slider">
+                                        <span class="gui-value" id="pitch-value">-0.06</span>
+                                    </div>
+                                    <div class="gui-controller gui-slider-container">
+                                        <label class="gui-label">yaw</label>
+                                        <input type="range" id="yaw-slider" min="-3.14159" max="3.14159" step="0.01" value="-0.99" class="gui-slider">
+                                        <span class="gui-value" id="yaw-value">-0.99</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Joint Controls -->
+                            <div class="gui-folder">
+                                <div class="gui-folder-title" data-target="gui-joint-controls">Joint Controls</div>
+                                <div class="gui-folder-content collapsed" id="gui-joint-controls">
+                                    <div class="gui-controller" style="display: flex; gap: 5px;">
+                                        <input type="text" id="joint-name-input" placeholder="joint name" style="flex: 1; padding: 2px 4px; font-size: 10px; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 2px;">
+                                        <button id="add-joint-btn" class="gui-button" style="padding: 2px 6px; font-size: 10px;">Add</button>
+                                    </div>
+                                    <div id="joint-sliders-container" style="max-height: 120px; overflow: auto;"></div>
+                                    
+                                    <!-- JointState File Controls -->
+                                    <div class="gui-controller" style="margin-top: 6px;">
+                                        <input type="file" id="jointstate-file-input" accept=".txt,.log,.yaml" style="width: 100%; font-size: 9px; margin-bottom: 3px;">
+                                        <div style="display: flex; gap: 3px;">
+                                            <button id="jointstate-play-btn" class="gui-button" style="flex: 1; font-size: 10px;">Play</button>
+                                            <button id="jointstate-pause-btn" class="gui-button" style="flex: 1; font-size: 10px;">Pause</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1012,7 +2190,23 @@ canvas:active {
                     if (!window.Robot3DViewer.renderer) { // 如果场景还未初始化
                         window.Robot3DViewer.initThreeJSScene();
                     } else { // 如果已初始化，仅调整大小
-                        setTimeout(window.Robot3DViewer.onWindowResize, 100);
+                        // 触发一次 resize，并在短延迟后再触发一次，以处理可能的布局抖动
+                        try {
+                            window.Robot3DViewer.onWindowResize();
+                        } catch (e) {
+                            console.warn('onWindowResize threw:', e);
+                        }
+                        setTimeout(function() {
+                            try {
+                                window.Robot3DViewer.onWindowResize();
+                                // 强制渲染一次，避免在某些情况下 canvas 没有刷新
+                                if (window.Robot3DViewer.renderer && window.Robot3DViewer.renderer.domElement) {
+                                    window.Robot3DViewer.renderer.render(window.Robot3DViewer.scene, window.Robot3DViewer.camera);
+                                }
+                            } catch (e) {
+                                console.warn('Deferred onWindowResize/render threw:', e);
+                            }
+                        }, 120);
                     }
                 }
             }
@@ -1045,6 +2239,28 @@ canvas:active {
     function mainInit() {
         console.log("DEBUG: Starting Robot 3D Viewer initialization");
         
+        // 确保所有必要的函数都已定义
+        if (!window.Robot3DViewer) {
+            console.error("ERROR: Robot3DViewer object not found");
+            return;
+        }
+        
+        // 检查必要的函数
+        if (typeof window.Robot3DViewer.addRobot3DSidebar !== 'function') {
+            console.error("ERROR: addRobot3DSidebar function not found");
+            return;
+        }
+        
+        if (typeof window.Robot3DViewer.setupEventListeners !== 'function') {
+            console.error("ERROR: setupEventListeners function not found");
+            return;
+        }
+        
+        if (typeof window.Robot3DViewer.loadDependencies !== 'function') {
+            console.error("ERROR: loadDependencies function not found");
+            return;
+        }
+        
         window.Robot3DViewer.addRobot3DSidebar();
         window.Robot3DViewer.setupEventListeners();
         
@@ -1052,7 +2268,11 @@ canvas:active {
             // 所有脚本加载成功后的回调
             // 只有当侧边栏可见时才初始化场景
             if ($('#robot-3d-container').is(':visible')) {
-                window.Robot3DViewer.initThreeJSScene();
+                if (typeof window.Robot3DViewer.initThreeJSScene === 'function') {
+                    window.Robot3DViewer.initThreeJSScene();
+                } else {
+                    console.error("ERROR: initThreeJSScene function not found");
+                }
             }
         });
     }

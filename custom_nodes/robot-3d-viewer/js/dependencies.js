@@ -62,9 +62,11 @@
             loadScript('./static/OrbitControls.js', 'OrbitControls', function() {
                 loadScript('./static/ColladaLoader.js', 'ColladaLoader', function() {
                     loadScript('./static/URDFLoader.js', 'URDFLoader', function() {
-                        console.log("DEBUG: All 3D dependencies (OrbitControls, ColladaLoader, URDFLoader) loaded successfully.");
-                        dependenciesLoaded = true;
-                        callback();
+                        loadEnvironmentScript(function() {
+                            console.log("DEBUG: All 3D dependencies (OrbitControls, ColladaLoader, URDFLoader, Environment) loaded successfully.");
+                            dependenciesLoaded = true;
+                            callback();
+                        });
                     });
                 });
             });
@@ -92,6 +94,32 @@
         script.onerror = function() {
             console.error(`ERROR: Failed to load ${checkObject} from ${url}`);
             RED.notify(`依赖库 ${checkObject} 加载失败`, { type: "error", timeout: 5000 });
+        };
+
+        document.head.appendChild(script);
+    }
+    
+    // 加载环境增强脚本
+    function loadEnvironmentScript(callback) {
+        // 检查是否已加载
+        if (window.Robot3DViewer && window.Robot3DViewer.Environment) {
+            console.log("DEBUG: Environment script is already loaded.");
+            callback();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = './js/environment.js';
+        script.async = false;
+
+        script.onload = function() {
+            console.log("DEBUG: Environment script loaded successfully");
+            callback();
+        };
+
+        script.onerror = function() {
+            console.warn("WARN: Failed to load environment.js, continuing without it");
+            callback(); // 继续执行，不阻塞主要功能
         };
 
         document.head.appendChild(script);

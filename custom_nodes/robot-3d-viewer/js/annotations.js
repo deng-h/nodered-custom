@@ -7,7 +7,9 @@
     let jointAnnotations = [];
     let annotationOverlay = null; // div 容器
     let annotationSVG = null;     // svg 容器 (画线)
-
+    // 控制标签距离的参数 - 值越大距离越远
+    const LABEL_DISTANCE_FACTOR = 90; // 增加这个值可以让标签更远
+    
     // 初始化注释 overlay (只需一次)
     function ensureAnnotationOverlay() {
         if (annotationOverlay) return;
@@ -130,6 +132,9 @@
     function updateAnnotations() {
         if (!window.Robot3DViewer.camera || !window.Robot3DViewer.renderer || !annotationOverlay || jointAnnotations.length === 0) return;
         const rect = window.Robot3DViewer.renderer.domElement.getBoundingClientRect();
+        const centerX = rect.width / 2;  // 容器中心点X
+        const centerY = rect.height / 2; // 容器中心点Y
+        
         jointAnnotations.forEach(ann => {
             if (!ann.jointObject) return;
             const worldPos = new THREE.Vector3();
@@ -146,21 +151,34 @@
             ann.lineEl.style.display = visible ? 'block' : 'none';
             if (!visible) return;
 
-            ann.labelEl.style.left = x + 'px';
-            ann.labelEl.style.top = y + 'px';
+            // 计算从容器中心到关节点的方向向量
+            const dirX = x - centerX;
+            const dirY = y - centerY;
+            const distance = Math.sqrt(dirX * dirX + dirY * dirY);
+            
+            // 标准化方向向量
+            let normX = 0;
+            let normY = 0;
+            if (distance > 0) {
+                normX = dirX / distance;
+                normY = dirY / distance;
+            } else {
+                // 如果关节在中心，默认向上放置标签
+                normY = -1;
+            }
+            
+            // 计算标签位置 - 远离关节点一定距离
+            const labelX = x + normX * LABEL_DISTANCE_FACTOR;
+            const labelY = y + normY * LABEL_DISTANCE_FACTOR;
 
-            // 线条起点(关节) -> 终点(标签上方稍偏移)
-            const labelRect = ann.labelEl.getBoundingClientRect();
-            const overlayRect = rect; // 坐标系相同 (absolute 叠在容器上)
-            const labelCenterX = parseFloat(ann.labelEl.style.left);
-            const labelCenterY = parseFloat(ann.labelEl.style.top);
-            const targetX = labelCenterX;
-            const targetY = labelCenterY - labelRect.height * 0.5 - 6; // 上方 6px
+            ann.labelEl.style.left = labelX + 'px';
+            ann.labelEl.style.top = labelY + 'px';
 
+            // 线条从关节点连接到标签
             ann.lineEl.setAttribute('x1', x);
             ann.lineEl.setAttribute('y1', y);
-            ann.lineEl.setAttribute('x2', targetX);
-            ann.lineEl.setAttribute('y2', targetY);
+            ann.lineEl.setAttribute('x2', labelX);
+            ann.lineEl.setAttribute('y2', labelY);
         });
     }
     
