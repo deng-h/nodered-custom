@@ -8,7 +8,7 @@
     let annotationOverlay = null; // div 容器
     let annotationSVG = null;     // svg 容器 (画线)
     // 控制标签距离的参数 - 值越大距离越远
-    const LABEL_DISTANCE_FACTOR = 90; // 增加这个值可以让标签更远
+    const LABEL_DISTANCE_FACTOR = 90;
     
     // 初始化注释 overlay (只需一次)
     function ensureAnnotationOverlay() {

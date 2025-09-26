@@ -69,7 +69,7 @@
             return false;
         });
         
-        // 添加轨道控制器（如果可用）- 使用webgl_animation_walk的控制风格
+        // 添加轨道控制器
         if (THREE.OrbitControls) {
             controls = new THREE.OrbitControls(camera, canvas);
             controls.target.set(0, 1, 0);
@@ -84,8 +84,8 @@
             controls.maxPolarAngle = PI90 - 0.05; // 几乎垂直但不能到地面以下
             
             // 设置距离范围
-            controls.minDistance = 2;
-            controls.maxDistance = 20;
+            controls.minDistance = 0.5;
+            controls.maxDistance = 10;
             
             // 自定义鼠标按键映射
             controls.mouseButtons = {
@@ -125,9 +125,6 @@
         // 创建模型
         createRobotModel();
         
-        // 绑定控制按钮事件
-        window.Robot3DViewer.bindControlEvents();
-        
         // 开始渲染循环
         animate();
         
@@ -139,7 +136,7 @@
     
     // 设置光源和地面（简化版，主要光源由environment.js处理）
     function setupLighting() {
-        // 添加地面（类似webgl_animation_walk的风格）
+        // 添加地面
         const size = 200;
         const repeat = 16;
         
@@ -229,28 +226,23 @@
                     }
                 });
                 
-                // 应用环境增强材质效果
-                if (window.Robot3DViewer && window.Robot3DViewer.Environment) {
-                    try {
-                        window.Robot3DViewer.Environment.enhanceMaterials(robot);
-                        console.log("DEBUG: Material enhancements applied");
-                    } catch (e) {
-                        console.warn("Failed to enhance materials:", e);
-                    }
-                }
+                // 使用统一的初始姿态常量
+                const initialPose = window.Robot3DViewer.ROBOT_INITIAL_POSE;
                 
-                const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0.95, 0);   // 稍微抬高让机器人站在地面上
-                const INITIAL_ROBOT_RPY = { roll: -1.62, pitch: 0.0, yaw: -0.99 }; // 角度（弧度制）
-
-                // 应用姿态（roll=X, pitch=Y, yaw=Z，按 XYZ 顺序）
+                // 应用初始位置
+                robot.position.set(
+                    initialPose.position.x,
+                    initialPose.position.y,
+                    initialPose.position.z
+                );
+                
+                // 应用初始姿态（roll=X, pitch=Y, yaw=Z，按 XYZ 顺序）
                 robot.rotation.set(
-                    INITIAL_ROBOT_RPY.roll,
-                    INITIAL_ROBOT_RPY.pitch,
-                    INITIAL_ROBOT_RPY.yaw,
+                    initialPose.rotation.roll,
+                    initialPose.rotation.pitch,
+                    initialPose.rotation.yaw,
                     'XYZ'
-                );       
-                
-                robot.position.add(INITIAL_ROBOT_POSITION);
+                );
 
                 scene.add(robot);
                 currentModel = robot;
@@ -264,15 +256,14 @@
                     console.warn('Failed to attach urdfLoader to model/userData', e);
                 }
                  // 新增：加载模型后，将滑块的初始值与模型的初始姿态同步
-                $('#roll-slider').val(INITIAL_ROBOT_RPY.roll);
-                $('#pitch-slider').val(INITIAL_ROBOT_RPY.pitch);
-                $('#yaw-slider').val(INITIAL_ROBOT_RPY.yaw);
+                $('#roll-slider').val(initialPose.rotation.roll);
+                $('#pitch-slider').val(initialPose.rotation.pitch);
+                $('#yaw-slider').val(initialPose.rotation.yaw);
                 
                 // 新增：调用一次更新函数，来设置模型的初始姿态和UI显示
                 window.Robot3DViewer.updateRobotPoseFromSliders();                   
                 $('#loading-indicator').hide();
                 
-                // 显示 Three.js 风格的GUI面板
                 $('#threejs-gui-panel').show();
 
                 // 如果关节坐标系显示已启用，重新创建坐标系
@@ -280,12 +271,14 @@
                     window.Robot3DViewer.createJointAxes();
                 }
 
-                // 假设关节名包含 HAND_L（需与模型节点名称匹配，可调试 console 输出）
                 window.Robot3DViewer.addJointAnnotation('HAND_L', 42.3);
                 window.Robot3DViewer.addJointAnnotation('HAND_R', 42.3);
                 window.Robot3DViewer.addJointAnnotation('Shoulder_Y_L', 42.3);
                 window.Robot3DViewer.addJointAnnotation('Shoulder_X_L', 42.3);
                 window.Robot3DViewer.addJointAnnotation('Shoulder_Z_L', 42.3);
+                
+                // 收集所有关节并更新关节选择器
+                window.Robot3DViewer.collectAllJoints();
             },
             progress => {
                 if (progress && progress.total > 0) {
@@ -328,29 +321,60 @@
     // 窗口大小变化处理
     function onWindowResize() {
         const container = document.getElementById('robot-3d-container');
-        if (!container || !camera || !renderer) return;
+        if (!container) {
+            console.warn('DEBUG: Container not found during resize');
+            return;
+        }
+        
+        if (!camera || !renderer) {
+            console.warn('DEBUG: Camera or renderer not available during resize');
+            return;
+        }
+
+        // 检查容器是否可见
+        if (!$(container).is(':visible')) {
+            console.log('DEBUG: Container not visible, skipping resize');
+            return;
+        }
 
         const containerRect = container.getBoundingClientRect();
+        
         // 防止高度或宽度为0（隐藏或未布局完成）导致的异常
         const width = Math.max(1, Math.floor(containerRect.width));
         const height = Math.max(1, Math.floor(containerRect.height));
 
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+        // 如果尺寸太小，可能容器还没准备好
+        if (width < 10 || height < 10) {
+            console.log('DEBUG: Container too small, deferring resize');
+            setTimeout(onWindowResize, 100);
+            return;
+        }
 
-        // 同步 canvas 的样式尺寸和渲染器尺寸，确保绘制区域真实可见
-        const canvas = renderer.domElement;
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-
-        renderer.setPixelRatio(window.devicePixelRatio || 1);
-        renderer.setSize(width, height, false);
-
-        // 立即触发一次渲染，避免在某些浏览器/情况下留下黑屏
         try {
-            renderer.render(scene, camera);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+
+            // 同步 canvas 的样式尺寸和渲染器尺寸，确保绘制区域真实可见
+            const canvas = renderer.domElement;
+            if (canvas) {
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+            }
+
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            renderer.setSize(width, height, false);
+
+            // 立即触发一次渲染，避免在某些浏览器/情况下留下黑屏
+            if (scene && camera) {
+                renderer.render(scene, camera);
+            }
+            
+            // 如果有控制器，也更新一下
+            if (controls) {
+                controls.update();
+            }
         } catch (e) {
-            console.warn('Renderer render failed during resize:', e);
+            console.warn('DEBUG: Resize operation failed:', e);
         }
     }
     
@@ -376,4 +400,53 @@
     Object.defineProperty(window.Robot3DViewer, 'robot', {
         get: function() { return currentModel; }
     });
+    
+    // 收集模型中的所有关节
+    function collectAllJoints() {
+        const joints = [];
+        if (!currentModel) return joints;
+        
+        // 从URDF Loader收集关节信息
+        try {
+            const loader = currentModel.userData && currentModel.userData.urdfLoader;
+            if (loader && loader.joints) {
+                for (const jointName in loader.joints) {
+                    const joint = loader.joints[jointName];
+                    if (joint && joint.jointType && joint.jointType !== 'fixed') {
+                        joints.push({
+                            name: jointName,
+                            type: joint.jointType,
+                            object: joint
+                        });
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Failed to collect joints from URDF loader:', e);
+        }
+        
+        // 如果没有从loader获取到关节，遍历模型树查找
+        if (joints.length === 0) {
+            currentModel.traverse(function(child) {
+                if (child.name && (
+                    child.name.toLowerCase().includes('joint') ||
+                    child.name.toLowerCase().includes('link') ||
+                    (child.parent && child.parent !== currentModel)
+                )) {
+                    joints.push({
+                        name: child.name,
+                        type: 'revolute', // 默认类型
+                        object: child
+                    });
+                }
+            });
+        }
+        
+        console.log('Collected joints:', joints);
+        
+        return joints;
+    }
+    
+    // 暴露关节收集函数
+    window.Robot3DViewer.collectAllJoints = collectAllJoints;
 })();

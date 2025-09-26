@@ -124,22 +124,10 @@ Robot3DViewerAPI.updateJointTemperature(name, temp) // 更新温度
 
 ## 🎉 立即开始使用
 
-1. **启动开发模式**:
-   ```bash
-   npm run dev
-   ```
-
-2. **启动 Node-RED**:
+1. **启动 Node-RED**:
    ```bash
    node .\packages\node_modules\node-red\red.js -s .\packages\node_modules\node-red\settings.js -u .\data\
    ```
 
-3. **开始开发**: 编辑 `js/` 目录中的模块文件，保存后自动重建！
+2. **开始开发**: 编辑 `js/` 目录中的模块文件，保存后自动重建！
 
----
-
-🎊 **恭喜！** 您现在拥有了一个现代化的、模块化的 Node-RED 3D 机器人查看器开发环境！
-
-💪 **下次开发更轻松**: 清晰的模块结构 + 自动化构建 = 高效开发体验
-
-🚀 **扩展性极强**: 想添加新功能？只需创建新模块并重新构建即可！

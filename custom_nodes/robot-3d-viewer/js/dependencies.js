@@ -2,6 +2,12 @@
 (function() {
     "use strict";
     
+    // 机器人初始姿态常量 - 统一定义
+    const ROBOT_INITIAL_POSE = {
+        position: { x: 0, y: 0.95, z: 0 },  // 稍微抬高让机器人站在地面上
+        rotation: { roll: -1.571, pitch: 0.000000, yaw: -0.99 }  // 角度（弧度制）
+    };
+    
     let isThreeJSLoaded = false;
     let dependenciesLoaded = false;
     
@@ -129,6 +135,55 @@
     window.Robot3DViewer = window.Robot3DViewer || {};
     window.Robot3DViewer.loadDependencies = loadDependencies;
     window.Robot3DViewer.isThreeJSLoaded = function() { return isThreeJSLoaded; };
+    window.Robot3DViewer.ROBOT_INITIAL_POSE = ROBOT_INITIAL_POSE;  // 暴露初始姿态常量
+    
+    // 添加全局重置函数作为备选方案
+    window.Robot3DViewer.resetRobotPose = function() {
+        console.log('DEBUG: Global reset function called');
+        if (window.Robot3DViewer.currentModel && window.Robot3DViewer.ROBOT_INITIAL_POSE) {
+            const initialPose = window.Robot3DViewer.ROBOT_INITIAL_POSE;
+            
+            window.Robot3DViewer.currentModel.position.set(
+                initialPose.position.x,
+                initialPose.position.y,
+                initialPose.position.z
+            );
+
+            window.Robot3DViewer.currentModel.rotation.set(
+                initialPose.rotation.roll,
+                initialPose.rotation.pitch,
+                initialPose.rotation.yaw,
+                'XYZ'
+            );
+            
+            // 更新滑块
+            if (typeof $ !== 'undefined') {
+                $('#roll-slider').val(initialPose.rotation.roll);
+                $('#pitch-slider').val(initialPose.rotation.pitch);
+                $('#yaw-slider').val(initialPose.rotation.yaw);
+                $('#roll-value').text(initialPose.rotation.roll.toFixed(2));
+                $('#pitch-value').text(initialPose.rotation.pitch.toFixed(2));
+                $('#yaw-value').text(initialPose.rotation.yaw.toFixed(2));
+            }
+            
+            console.log('DEBUG: Global reset completed');
+            return true;
+        }
+        console.warn('WARN: Cannot reset - model or pose not available');
+        return false;
+    };
+    
+    // 添加按钮点击处理函数
+    window.Robot3DViewer.handleResetClick = function(event) {
+        console.log('DEBUG: Reset button clicked via direct event handler');
+        event.preventDefault();
+        
+        const success = window.Robot3DViewer.resetRobotPose();
+        if (success && window.Robot3DViewer.updateRobotPoseFromSliders) {
+            window.Robot3DViewer.updateRobotPoseFromSliders();
+        }
+    };
+    
     Object.defineProperty(window.Robot3DViewer, 'dependenciesLoaded', {
         get: function() { return dependenciesLoaded; }
     });

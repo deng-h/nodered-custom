@@ -52,38 +52,74 @@
             }
         });
         
-        // 重置相机按钮
-        $('#reset-camera-btn').off('click').on('click', function() {
-            if (window.Robot3DViewer.camera) {
-                window.Robot3DViewer.camera.position.set(2, 2, 3);
-                window.Robot3DViewer.camera.lookAt(0, 1, 0);
-            }
-            if (window.Robot3DViewer.controls) {
-                window.Robot3DViewer.controls.reset();
+        // 重置机器人姿态按钮 - 使用事件代理确保绑定成功
+        $(document).off('click', '#reset-pose-btn').on('click', '#reset-pose-btn', function() {
+            console.log('DEBUG: Reset pose button clicked');
+            
+            // 优先使用全局重置函数
+            if (window.Robot3DViewer && window.Robot3DViewer.resetRobotPose) {
+                const success = window.Robot3DViewer.resetRobotPose();
+                if (success) {
+                    // 调用姿态更新函数
+                    if (window.Robot3DViewer.updateRobotPoseFromSliders) {
+                        window.Robot3DViewer.updateRobotPoseFromSliders();
+                    }
+                    return;
+                }
             }
             
-            // 重置机器人模型姿态
-            if (window.Robot3DViewer.currentModel) {
-                const INITIAL_ROBOT_POSITION = new THREE.Vector3(0, 0.95, 0);
-                const INITIAL_ROBOT_RPY = { roll: -1.62, pitch: -0.06, yaw: -0.99 };
-
-                window.Robot3DViewer.currentModel.rotation.set(
-                    INITIAL_ROBOT_RPY.roll,
-                    INITIAL_ROBOT_RPY.pitch,
-                    INITIAL_ROBOT_RPY.yaw,
-                    'XYZ'
-                );       
-                
-                window.Robot3DViewer.currentModel.position.copy(INITIAL_ROBOT_POSITION);
-                
-                // 更新滑块值
-                $('#roll-slider').val(INITIAL_ROBOT_RPY.roll);
-                $('#pitch-slider').val(INITIAL_ROBOT_RPY.pitch);
-                $('#yaw-slider').val(INITIAL_ROBOT_RPY.yaw);
-                
-                // 更新显示
+            // 回退到本地逻辑
+            console.log('DEBUG: Using local reset logic');
+            
+            // 检查必要的对象是否存在
+            if (!window.Robot3DViewer.currentModel) {
+                console.warn('WARN: No robot model loaded');
+                return;
+            }
+            
+            if (!window.Robot3DViewer.ROBOT_INITIAL_POSE) {
+                console.warn('WARN: No initial pose defined, using fallback');
+                // 提供一个回退的初始姿态
+                const fallbackPose = {
+                    position: { x: 0, y: 0.95, z: 0 },
+                    rotation: { roll: -1.571, pitch: 0.0, yaw: -0.99 }
+                };
+                window.Robot3DViewer.ROBOT_INITIAL_POSE = fallbackPose;
+            }
+            
+            const initialPose = window.Robot3DViewer.ROBOT_INITIAL_POSE;
+            console.log('DEBUG: Using initial pose:', initialPose);
+            
+            // 重置机器人位置和旋转
+            window.Robot3DViewer.currentModel.position.set(
+                initialPose.position.x,
+                initialPose.position.y,
+                initialPose.position.z
+            );
+            
+            window.Robot3DViewer.currentModel.rotation.set(
+                initialPose.rotation.roll,
+                initialPose.rotation.pitch,
+                initialPose.rotation.yaw,
+                'XYZ'
+            );
+            
+            // 更新滑块值
+            $('#roll-slider').val(initialPose.rotation.roll);
+            $('#pitch-slider').val(initialPose.rotation.pitch);
+            $('#yaw-slider').val(initialPose.rotation.yaw);
+            
+            // 更新显示值
+            $('#roll-value').text(initialPose.rotation.roll.toFixed(2));
+            $('#pitch-value').text(initialPose.rotation.pitch.toFixed(2));
+            $('#yaw-value').text(initialPose.rotation.yaw.toFixed(2));
+            
+            // 更新显示
+            if (window.Robot3DViewer.updateRobotPoseFromSliders) {
                 window.Robot3DViewer.updateRobotPoseFromSliders();
             }
+            
+            console.log('DEBUG: Robot pose reset completed');
         });
         
         // 自动旋转复选框
@@ -592,6 +628,8 @@
         console.log("DEBUG: Basic mouse controls setup complete");
     }
     
+
+    
     // 暴露给全局
     window.Robot3DViewer = window.Robot3DViewer || {};
     window.Robot3DViewer.bindControlEvents = bindControlEvents;
@@ -603,6 +641,7 @@
     window.Robot3DViewer.createJointAxes = createJointAxes;
     window.Robot3DViewer.removeJointAxes = removeJointAxes;
     window.Robot3DViewer.updateModelTransparency = updateModelTransparency;
+
     Object.defineProperty(window.Robot3DViewer, 'autoRotate', {
         get: function() { return autoRotate; }
     });

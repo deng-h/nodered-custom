@@ -21,7 +21,7 @@
                     <div id="threejs-gui-panel" style="position: absolute; top: 10px; right: 10px; width: 240px; font-family: 'Lucida Grande', sans-serif; font-size: 11px; z-index: 1000; display: none;">
                         <!-- 主控制折叠按钮 -->
                         <div class="gui-main-header" id="gui-main-toggle">
-                            <span>Robot Controls</span>
+                            <span>机器人设置</span>
                             <span class="gui-toggle-icon">▼</span>
                         </div>
                         
@@ -29,36 +29,36 @@
                         <div id="gui-main-content" class="gui-main-content collapsed">
                             <!-- Visibility Controls -->
                             <div class="gui-folder">
-                                <div class="gui-folder-title" data-target="gui-visibility">Visibility</div>
+                                <div class="gui-folder-title" data-target="gui-visibility">可见性</div>
                                 <div class="gui-folder-content collapsed" id="gui-visibility">
-                                    <div class="gui-controller">
-                                        <label><input type="checkbox" id="show-model-checkbox" checked> show model</label>
+                                    <div class="gui-controller">        
+                                        <label><input type="checkbox" id="show-model-checkbox" checked> 显示模型</label>
                                     </div>
                                     <div class="gui-controller">
-                                        <label><input type="checkbox" id="show-joint-axes-checkbox"> show joint axes</label>
+                                        <label><input type="checkbox" id="show-joint-axes-checkbox"> 显示关节轴</label>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- View Controls -->
                             <div class="gui-folder">
-                                <div class="gui-folder-title" data-target="gui-view-controls">View Controls</div>
+                                <div class="gui-folder-title" data-target="gui-view-controls">视图控制</div>
                                 <div class="gui-folder-content collapsed" id="gui-view-controls">
                                     <div class="gui-controller">
-                                        <button id="reset-camera-btn" class="gui-button">reset camera</button>
+                                        <button id="reset-pose-btn" class="gui-button">重置姿态</button>
                                     </div>
                                     <div class="gui-controller">
-                                        <label><input type="checkbox" id="auto-rotate-checkbox"> auto rotate</label>
+                                        <label><input type="checkbox" id="auto-rotate-checkbox"> 自动旋转</label>
                                     </div>
                                 </div>
                             </div>
                         
                             <!-- Model Properties -->
                             <div class="gui-folder">
-                                <div class="gui-folder-title" data-target="gui-model-properties">Model Properties</div>
+                                <div class="gui-folder-title" data-target="gui-model-properties">模型属性</div>
                                 <div class="gui-folder-content collapsed" id="gui-model-properties">
                                     <div class="gui-controller gui-slider-container">
-                                        <label class="gui-label">transparency</label>
+                                        <label class="gui-label">透明度</label>
                                         <input type="range" id="transparency-slider" min="0.1" max="1" step="0.05" value="1" class="gui-slider">
                                         <span class="gui-value" id="transparency-value">1.0</span>
                                     </div>
@@ -67,7 +67,7 @@
                             
                             <!-- Pose Controls -->
                             <div class="gui-folder">
-                                <div class="gui-folder-title" data-target="gui-pose-controls">Pose Controls</div>
+                                <div class="gui-folder-title" data-target="gui-pose-controls">姿态控制</div>
                                 <div class="gui-folder-content collapsed" id="gui-pose-controls">
                                     <div class="gui-controller gui-slider-container">
                                         <label class="gui-label">roll</label>
@@ -86,6 +86,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+
                             
                             <!-- Joint Controls -->
                             <div class="gui-folder">
@@ -115,40 +117,104 @@
         
         RED.sidebar.addTab({
             id: "robot-3d-viewer",
-            label: "3D模型",
-            name: "机器人3D查看器",
+            label: "机器人状态",
+            name: "机器人状态",
             iconClass: "fa fa-cube",
             content: sidebarContent,
             enableOnEdit: false,
             onchange: function() {
                 // 当侧边栏切换到3D查看器时
                 if ($('#robot-3d-container').is(':visible') && window.Robot3DViewer.dependenciesLoaded) {
-                     // 只有当依赖加载完成且面板可见时，才初始化或重新调整大小
-                    if (!window.Robot3DViewer.renderer) { // 如果场景还未初始化
+                    // 只有当依赖加载完成且面板可见时，才初始化或重新调整大小
+                    if (!window.Robot3DViewer.renderer) { 
+                        // 如果场景还未初始化
+                        console.log("DEBUG: Initializing 3D scene");
                         window.Robot3DViewer.initThreeJSScene();
-                    } else { // 如果已初始化，仅调整大小
-                        // 触发一次 resize，并在短延迟后再触发一次，以处理可能的布局抖动
+                    } else { 
+                        // 如果已初始化，需要重新激活场景
+                        console.log("DEBUG: Reactivating 3D scene after sidebar switch");
+                        
+                        // 立即执行一次resize和渲染，处理可能的尺寸变化
                         try {
                             window.Robot3DViewer.onWindowResize();
+                            
+                            // 强制渲染一次，确保场景可见
+                            if (window.Robot3DViewer.renderer && 
+                                window.Robot3DViewer.scene && 
+                                window.Robot3DViewer.camera) {
+                                window.Robot3DViewer.renderer.render(
+                                    window.Robot3DViewer.scene, 
+                                    window.Robot3DViewer.camera
+                                );
+                            }
                         } catch (e) {
-                            console.warn('onWindowResize threw:', e);
+                            console.warn('Initial reactivation failed:', e);
                         }
+                        
+                        // 使用多个延迟来处理不同情况下的布局完成时机
                         setTimeout(function() {
                             try {
                                 window.Robot3DViewer.onWindowResize();
-                                // 强制渲染一次，避免在某些情况下 canvas 没有刷新
-                                if (window.Robot3DViewer.renderer && window.Robot3DViewer.renderer.domElement) {
-                                    window.Robot3DViewer.renderer.render(window.Robot3DViewer.scene, window.Robot3DViewer.camera);
+                                if (window.Robot3DViewer.renderer && 
+                                    window.Robot3DViewer.scene && 
+                                    window.Robot3DViewer.camera) {
+                                    window.Robot3DViewer.renderer.render(
+                                        window.Robot3DViewer.scene, 
+                                        window.Robot3DViewer.camera
+                                    );
                                 }
                             } catch (e) {
-                                console.warn('Deferred onWindowResize/render threw:', e);
+                                console.warn('First deferred reactivation failed:', e);
                             }
-                        }, 120);
+                        }, 100);
+                        
+                        setTimeout(function() {
+                            try {
+                                window.Robot3DViewer.onWindowResize();
+                                if (window.Robot3DViewer.renderer && 
+                                    window.Robot3DViewer.scene && 
+                                    window.Robot3DViewer.camera) {
+                                    window.Robot3DViewer.renderer.render(
+                                        window.Robot3DViewer.scene, 
+                                        window.Robot3DViewer.camera
+                                    );
+                                }
+                                console.log("DEBUG: 3D scene reactivation completed");
+                            } catch (e) {
+                                console.warn('Second deferred reactivation failed:', e);
+                            }
+                        }, 300);
                     }
                 }
             }
         });
+        
+        // 立即绑定按钮事件，不等待场景初始化
+        setTimeout(function() {
+            console.log('DEBUG: Attempting to bind control events');
+            if (window.Robot3DViewer && window.Robot3DViewer.bindControlEvents) {
+                console.log('DEBUG: bindControlEvents function found, calling it');
+                window.Robot3DViewer.bindControlEvents();
+            } else {
+                console.warn('WARN: bindControlEvents function not available');
+            }
+            
+            // 直接绑定重置姿态按钮作为备选方案
+            setTimeout(function() {
+                console.log('DEBUG: Attempting direct button binding');
+                const resetBtn = document.getElementById('reset-pose-btn');
+                if (resetBtn) {
+                    console.log('DEBUG: Found reset button, binding click event');
+                    resetBtn.removeEventListener('click', window.Robot3DViewer.handleResetClick);
+                    resetBtn.addEventListener('click', window.Robot3DViewer.handleResetClick);
+                } else {
+                    console.warn('WARN: Reset button not found in DOM');
+                }
+            }, 200);
+        }, 500); // 增加延迟确保DOM和脚本完全加载
     }
+    
+
     
     // 暴露给全局
     window.Robot3DViewer = window.Robot3DViewer || {};

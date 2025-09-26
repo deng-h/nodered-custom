@@ -1,5 +1,4 @@
 // Robot 3D Viewer - Main Entry Point
-// 测试自动构建功能
 (function() {
     "use strict";
     
@@ -12,9 +11,8 @@
         }
     }
     
-    // 主初始化函数
     function mainInit() {
-        console.log("DEBUG: Starting Robot 3D Viewer initialization");
+        console.log("DEBUG: Robot 3D Viewer 开始加载...");
         
         // 确保所有必要的函数都已定义
         if (!window.Robot3DViewer) {
@@ -42,7 +40,6 @@
         window.Robot3DViewer.setupEventListeners();
         
         window.Robot3DViewer.loadDependencies(function() {
-            // 所有脚本加载成功后的回调
             // 只有当侧边栏可见时才初始化场景
             if ($('#robot-3d-container').is(':visible')) {
                 if (typeof window.Robot3DViewer.initThreeJSScene === 'function') {
@@ -57,7 +54,6 @@
     // 启动逻辑
     waitForRED(mainInit);
     
-    // Node-RED 节点注册
     RED.nodes.registerType('robot-3d-viewer', {
         category: 'config',
         color: '#a6bbcf',
@@ -72,7 +68,7 @@
         }
     });
 
-    // 暴露简易全局 API (可在浏览器控制台或其他脚本中调用)
+    // 暴露全局API
     window.Robot3DViewerAPI = {
         addJointAnnotation: function(name, temp){ 
             window.Robot3DViewer.addJointAnnotation(name, temp); 

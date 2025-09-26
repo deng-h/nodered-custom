@@ -4,14 +4,10 @@
     
     // 添加雾效到场景
     function addFogEffect(scene) {
-        // 创建类似webgl_animation_walk的雾效
-        const fogColor = 0xeeeeee; // 灰色雾
+        const fogColor = 0xeeeeee;
         scene.fog = new THREE.Fog(fogColor, 2, 20);
-        
         // 设置背景色与雾色一致
         scene.background = new THREE.Color(fogColor);
-        
-        console.log("DEBUG: Fog effect added to scene");
         return scene;
     }
     
@@ -155,32 +151,6 @@
         return scene;
     }
     
-    // 优化材质以获得更好的视觉效果
-    function enhanceMaterials(object) {
-        object.traverse(function(child) {
-            if (child.isMesh && child.material) {
-                // 为标准材质添加环境贴图
-                if (child.material.type === 'MeshStandardMaterial') {
-                    // 调整材质参数以获得更好的视觉效果
-                    child.material.envMapIntensity = 0.5;
-                    
-                    // 根据材质名称或颜色调整参数
-                    const color = child.material.color;
-                    if (color) {
-                        // 如果材质偏向金属色，增加金属度
-                        const brightness = (color.r + color.g + color.b) / 3;
-                        if (brightness < 0.3) {
-                            child.material.metalness = Math.min(child.material.metalness + 0.2, 1.0);
-                            child.material.roughness = Math.max(child.material.roughness - 0.1, 0.1);
-                        }
-                    }
-                }
-            }
-        });
-        
-        return object;
-    }
-    
     // 暴露函数到全局对象
     window.Robot3DViewer = window.Robot3DViewer || {};
     window.Robot3DViewer.Environment = {
@@ -188,6 +158,5 @@
         createEnvironmentMap: createEnvironmentMap,
         addAmbientOcclusion: addAmbientOcclusion,
         addVisualEffects: addVisualEffects,
-        enhanceMaterials: enhanceMaterials
     };
 })();
