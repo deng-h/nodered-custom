@@ -427,22 +427,22 @@
             }
         }
     },
-    "node-red-contrib-robot-3d-viewer": {
-        "name": "node-red-contrib-robot-3d-viewer",
+    "node-red-contrib-hand-3d-viewer": {
+        "name": "node-red-contrib-hand-3d-viewer",
         "version": "0.1.0",
         "local": false,
         "user": false,
         "nodes": {
-            "robot-3d-viewer": {
-                "name": "robot-3d-viewer",
+            "hand-3d-viewer": {
+                "name": "hand-3d-viewer",
                 "types": [
-                    "robot-3d-viewer"
+                    "hand-3d-viewer"
                 ],
                 "enabled": true,
                 "local": false,
                 "user": false,
-                "module": "node-red-contrib-robot-3d-viewer",
-                "file": "D:\\myCode\\13-nodered-dev\\node_modules\\node-red-contrib-robot-3d-viewer\\robot-3d-viewer.js"
+                "module": "node-red-contrib-hand-3d-viewer",
+                "file": "D:\\myCode\\13-nodered-dev\\node_modules\\node-red-contrib-hand-3d-viewer\\hand-3d-viewer.js"
             }
         }
     }

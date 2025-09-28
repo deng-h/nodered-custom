@@ -1,0 +1,271 @@
+/* Hand 3D Viewer - Styles */
+
+/* 主容器样式 */
+#hand-3d-sidebar-content {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* 3D容器样式 */
+#hand-3d-container {
+    position: relative;
+    background: linear-gradient(135deg, #2c3e50 0%, #3b4252 100%);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#hand-3d-container canvas {
+    display: block;
+    border-radius: 4px;
+}
+
+/* 加载指示器 */
+#loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #eceff4;
+    text-align: center;
+    z-index: 1000;
+    font-size: 12px;
+}
+
+#loading-indicator .fa-spinner {
+    animation: spin 1s linear infinite;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 控制面板样式 */
+#threejs-gui-panel {
+    background-color: #4c566a;
+    border-top: 1px solid #5e81ac;
+    color: #eceff4;
+}
+
+/* 手型切换按钮 */
+.hand-switch-btn {
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hand-switch-btn:hover {
+    background-color: #5e81ac !important;
+    color: #eceff4 !important;
+    transform: translateY(-1px);
+}
+
+.hand-switch-btn.active {
+    background-color: #88c0d0 !important;
+    color: #2e3440 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 滑块样式 */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #3b4252;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #88c0d0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eceff4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #81a1c1;
+    transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #88c0d0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eceff4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 功能按钮样式 */
+button {
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: #5e81ac !important;
+    color: #eceff4 !important;
+    transform: translateY(-1px);
+}
+
+button.active:not(.hand-switch-btn) {
+    background-color: #88c0d0 !important;
+    color: #2e3440 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 标签样式 */
+label {
+    font-size: 11px;
+    color: #d8dee9;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 数值显示 */
+#roll-value, #pitch-value, #yaw-value {
+    font-family: 'Courier New', monospace;
+    background-color: #3b4252;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 10px;
+    min-width: 35px;
+    text-align: center;
+}
+
+/* 状态信息 */
+.status-info {
+    font-size: 10px;
+    color: #d8dee9;
+    line-height: 1.4;
+}
+
+.status-info div {
+    margin-bottom: 2px;
+    padding-left: 2px;
+}
+
+/* 分组样式 */
+.control-group {
+    margin-bottom: 15px;
+    padding: 8px;
+    background-color: rgba(59, 66, 82, 0.5);
+    border-radius: 4px;
+    border-left: 3px solid #5e81ac;
+}
+
+.control-group-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #88c0d0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 网格布局 */
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.button-grid-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 300px) {
+    .button-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #threejs-gui-panel {
+        font-size: 11px;
+    }
+    
+    button {
+        font-size: 10px !important;
+        padding: 3px !important;
+    }
+}
+
+/* 工具提示样式 */
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2e3440;
+    color: #eceff4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+
+/* 滚动条样式 */
+#hand-3d-sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-track {
+    background: #3b4252;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-thumb {
+    background: #5e81ac;
+    border-radius: 3px;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: #81a1c1;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 高亮效果 */
+.highlight {
+    background-color: rgba(136, 192, 208, 0.2) !important;
+    border: 1px solid #88c0d0 !important;
+    box-shadow: 0 0 8px rgba(136, 192, 208, 0.3) !important;
+}

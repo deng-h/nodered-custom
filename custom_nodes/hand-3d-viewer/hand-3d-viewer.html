@@ -1,0 +1,1565 @@
+<script type="text/html" data-template-name="hand-3d-viewer">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> 名称</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-defaultHand"><i class="fa fa-hand-o-up"></i> 默认手型</label>
+        <select id="node-input-defaultHand" style="width:70%;">
+            <option value="left">左手</option>
+            <option value="right">右手</option>
+        </select>
+    </div>
+    <div class="form-tips">
+        <b>提示:</b> 这个节点用于加载手部3D查看器到侧边栏，支持左右手模型切换。
+    </div>
+</script>
+<!-- CSS Styles -->
+<style>
+/* Hand 3D Viewer - Styles */
+
+/* 主容器样式 */
+#hand-3d-sidebar-content {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* 3D容器样式 */
+#hand-3d-container {
+    position: relative;
+    background: linear-gradient(135deg, #2c3e50 0%, #3b4252 100%);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#hand-3d-container canvas {
+    display: block;
+    border-radius: 4px;
+}
+
+/* 加载指示器 */
+#loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #eceff4;
+    text-align: center;
+    z-index: 1000;
+    font-size: 12px;
+}
+
+#loading-indicator .fa-spinner {
+    animation: spin 1s linear infinite;
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 控制面板样式 */
+#threejs-gui-panel {
+    background-color: #4c566a;
+    border-top: 1px solid #5e81ac;
+    color: #eceff4;
+}
+
+/* 手型切换按钮 */
+.hand-switch-btn {
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hand-switch-btn:hover {
+    background-color: #5e81ac !important;
+    color: #eceff4 !important;
+    transform: translateY(-1px);
+}
+
+.hand-switch-btn.active {
+    background-color: #88c0d0 !important;
+    color: #2e3440 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 滑块样式 */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #3b4252;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #88c0d0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eceff4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #81a1c1;
+    transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #88c0d0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eceff4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 功能按钮样式 */
+button {
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: #5e81ac !important;
+    color: #eceff4 !important;
+    transform: translateY(-1px);
+}
+
+button.active:not(.hand-switch-btn) {
+    background-color: #88c0d0 !important;
+    color: #2e3440 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 标签样式 */
+label {
+    font-size: 11px;
+    color: #d8dee9;
+    margin-bottom: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 数值显示 */
+#roll-value, #pitch-value, #yaw-value {
+    font-family: 'Courier New', monospace;
+    background-color: #3b4252;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 10px;
+    min-width: 35px;
+    text-align: center;
+}
+
+/* 状态信息 */
+.status-info {
+    font-size: 10px;
+    color: #d8dee9;
+    line-height: 1.4;
+}
+
+.status-info div {
+    margin-bottom: 2px;
+    padding-left: 2px;
+}
+
+/* 分组样式 */
+.control-group {
+    margin-bottom: 15px;
+    padding: 8px;
+    background-color: rgba(59, 66, 82, 0.5);
+    border-radius: 4px;
+    border-left: 3px solid #5e81ac;
+}
+
+.control-group-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #88c0d0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 网格布局 */
+.button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.button-grid-full {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 300px) {
+    .button-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #threejs-gui-panel {
+        font-size: 11px;
+    }
+    
+    button {
+        font-size: 10px !important;
+        padding: 3px !important;
+    }
+}
+
+/* 工具提示样式 */
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2e3440;
+    color: #eceff4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+
+/* 滚动条样式 */
+#hand-3d-sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-track {
+    background: #3b4252;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-thumb {
+    background: #5e81ac;
+    border-radius: 3px;
+}
+
+#hand-3d-sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: #81a1c1;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 高亮效果 */
+.highlight {
+    background-color: rgba(136, 192, 208, 0.2) !important;
+    border: 1px solid #88c0d0 !important;
+    box-shadow: 0 0 8px rgba(136, 192, 208, 0.3) !important;
+}
+</style>
+<!-- JavaScript Modules -->
+<script type="text/javascript">
+    // 初始化全局命名空间
+    window.Hand3DViewer = {};
+</script>
+
+<!-- 依赖加载模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - Dependencies Management
+(function() {
+    "use strict";
+    
+    // 全局状态
+    let threeJSLoaded = false;
+    let urdfLoaderLoaded = false;
+    
+    const DEPENDENCIES = {
+        threeJS: './hand-3d-viewer/static/three.min.js',
+        orbitControls: './hand-3d-viewer/static/OrbitControls.js',
+        stlLoader: './hand-3d-viewer/static/STLLoader.js',
+        urdfLoader: './hand-3d-viewer/static/URDFLoader.js',
+        colladaLoader: './hand-3d-viewer/static/ColladaLoader.js'
+    };
+    
+    // 初始姿态常量 - 区分左手和右手
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.LEFT_HAND_INITIAL_POSE = {
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { roll: -1.571, pitch: 0, yaw: 0 }
+    };
+    window.Hand3DViewer.RIGHT_HAND_INITIAL_POSE = {
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { roll: -1.571, pitch: 0, yaw: 0 }
+    };
+    
+    // 获取当前手部类型的初始姿态
+    window.Hand3DViewer.getCurrentHandInitialPose = function() {
+        const handType = window.Hand3DViewer.currentHandType || 'left';
+        return handType === 'left' ? 
+            window.Hand3DViewer.LEFT_HAND_INITIAL_POSE : 
+            window.Hand3DViewer.RIGHT_HAND_INITIAL_POSE;
+    };
+    
+    // 保持向后兼容性
+    Object.defineProperty(window.Hand3DViewer, 'HAND_INITIAL_POSE', {
+        get: function() {
+            return this.getCurrentHandInitialPose();
+        }
+    });
+    
+    // 全局变量控制
+    window.Hand3DViewer.autoRotate = false;
+    window.Hand3DViewer.showJointAxes = false;
+    window.Hand3DViewer.dependenciesLoaded = false;
+    
+    /**
+     * 加载脚本
+     */
+    function loadScript(url, callback, errorCallback) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        
+        script.onload = function() {
+            console.log(`DEBUG: Loaded ${url}`);
+            if (callback) callback();
+        };
+        
+        script.onerror = function() {
+            console.error(`ERROR: Failed to load ${url}`);
+            if (errorCallback) errorCallback();
+        };
+        
+        script.src = url;
+        document.head.appendChild(script);
+    }
+    
+    /**
+     * 检查Three.js是否已加载
+     */
+    function isThreeJSLoaded() {
+        return typeof THREE !== 'undefined' && threeJSLoaded;
+    }
+    
+    /**
+     * 检查URDF Loader是否已加载
+     */
+    function isURDFLoaderLoaded() {
+        return typeof URDFLoader !== 'undefined' && urdfLoaderLoaded;
+    }
+    
+    function loadDependencies(callback) {
+        console.log("DEBUG: Starting dependency loading for Hand 3D Viewer...");
+        
+        // 检查是否已经加载
+        if (window.Hand3DViewer.dependenciesLoaded && isThreeJSLoaded() && isURDFLoaderLoaded()) {
+            console.log("DEBUG: Dependencies already loaded");
+            if (callback) callback();
+            return;
+        }
+        
+        function onError() {
+            console.error("ERROR: Failed to load some dependencies");
+            RED.notify("依赖库加载失败，3D查看器可能无法正常工作", { type: "error", timeout: 8000 });
+        }
+        
+        // 第一步：先加载 Three.js
+        loadScript(DEPENDENCIES.threeJS, function() {
+            threeJSLoaded = true;
+            console.log("DEBUG: Three.js loaded, loading other dependencies...");
+            
+            let loadedCount = 0;
+            const remainingDeps = 4; // controls, stl loader, urdf loader, collada loader
+            
+            function checkRemainingComplete() {
+                loadedCount++;
+                if (loadedCount === remainingDeps) {
+                    urdfLoaderLoaded = true;
+                    window.Hand3DViewer.dependenciesLoaded = true;
+                    console.log("DEBUG: All dependencies loaded successfully");
+                    if (callback) callback();
+                }
+            }
+            
+            // 第二步：Three.js 加载完成后，并行加载其他依赖
+            loadScript(DEPENDENCIES.orbitControls, checkRemainingComplete, onError);
+            loadScript(DEPENDENCIES.stlLoader, checkRemainingComplete, onError);
+            loadScript(DEPENDENCIES.urdfLoader, checkRemainingComplete, onError);
+            loadScript(DEPENDENCIES.colladaLoader, checkRemainingComplete, onError);
+            
+        }, onError);
+    }
+    
+    window.Hand3DViewer.loadDependencies = loadDependencies;
+    window.Hand3DViewer.isThreeJSLoaded = isThreeJSLoaded;
+    window.Hand3DViewer.isURDFLoaderLoaded = isURDFLoaderLoaded;
+})();
+</script>
+
+<!-- 环境增强模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - Environment Enhancement
+(function() {
+    "use strict";
+    
+    /**
+     * 设置高质量渲染
+     */
+    function setupHighQualityRendering(renderer) {
+        if (!renderer) return;
+        
+        // 启用物理正确的光照
+        renderer.physicallyCorrectLights = true;
+        
+        // 启用阴影
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.shadowMap.autoUpdate = true;
+        
+        // 设置色调映射
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        
+        // 设置色彩空间
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        
+        console.log("DEBUG: High quality rendering configured");
+    }
+    
+    /**
+     * 设置场景背景
+     */
+    function setupSceneBackground(scene) {
+        if (!scene) return;
+        
+        // 创建渐变背景
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        
+        const context = canvas.getContext('2d');
+        const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, '#2c3e50'); // 深蓝灰色顶部
+        gradient.addColorStop(1, '#34495e'); // 略深的底部
+        
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const bgTexture = new THREE.CanvasTexture(canvas);
+        bgTexture.colorSpace = THREE.SRGBColorSpace;
+        scene.background = bgTexture;
+    }
+    
+    /**
+     * 添加专业级光照
+     */
+    function setupProfessionalLighting(scene) {
+        if (!scene) return;
+        
+        // 清除现有灯光
+        const lights = [];
+        scene.traverse(function(child) {
+            if (child.isLight) {
+                lights.push(child);
+            }
+        });
+        lights.forEach(light => scene.remove(light));
+        
+        // 主光源 - 模拟太阳光
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        mainLight.position.set(10, 10, 5);
+        mainLight.target.position.set(0, 0, 0);
+        
+        // 配置阴影
+        mainLight.castShadow = true;
+        mainLight.shadow.mapSize.width = 2048;
+        mainLight.shadow.mapSize.height = 2048;
+        mainLight.shadow.camera.near = 0.1;
+        mainLight.shadow.camera.far = 50;
+        mainLight.shadow.camera.left = -10;
+        mainLight.shadow.camera.right = 10;
+        mainLight.shadow.camera.top = 10;
+        mainLight.shadow.camera.bottom = -10;
+        
+        scene.add(mainLight);
+        scene.add(mainLight.target);
+        
+        // 补光 - 从侧面照亮
+        const fillLight = new THREE.DirectionalLight(0x87ceeb, 0.4);
+        fillLight.position.set(-5, 3, 5);
+        scene.add(fillLight);
+        
+        // 环境光 - 提供基础照明
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+        scene.add(ambientLight);
+        
+        // 顶部柔光
+        const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        topLight.position.set(0, 10, 0);
+        scene.add(topLight);
+    }
+    
+    /**
+     * 添加视觉增强效果
+     */
+    function addVisualEffects(scene, renderer) {
+        try {
+            setupSceneBackground(scene);
+            setupHighQualityRendering(renderer);
+            setupProfessionalLighting(scene);
+            
+            console.log("DEBUG: Visual effects added successfully");
+        } catch (error) {
+            console.warn("Failed to setup visual effects:", error);
+        }
+    }
+    
+    // 暴露给全局命名空间
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.Environment = {
+        addVisualEffects: addVisualEffects,
+        setupHighQualityRendering: setupHighQualityRendering,
+        setupSceneBackground: setupSceneBackground,
+        setupProfessionalLighting: setupProfessionalLighting
+    };
+    
+    console.log("DEBUG: Hand 3D Viewer environment module initialized");
+    
+})();
+</script>
+
+<!-- 控制和事件模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - Controls and Events
+(function() {
+    "use strict";
+    
+    /**
+     * 更新手部姿态（从滑块值）
+     */
+    function updateHandPoseFromSliders() {
+        const currentModel = window.Hand3DViewer.currentModel;
+        if (!currentModel) return;
+        
+        const rollSlider = $('#roll-slider');
+        const pitchSlider = $('#pitch-slider');
+        const yawSlider = $('#yaw-slider');
+        
+        if (rollSlider.length && pitchSlider.length && yawSlider.length) {
+            const roll = parseFloat(rollSlider.val()) || 0;
+            const pitch = parseFloat(pitchSlider.val()) || 0;
+            const yaw = parseFloat(yawSlider.val()) || 0;
+            
+            // 应用旋转（XYZ顺序）
+            currentModel.rotation.set(roll, pitch, yaw, 'XYZ');
+            
+            // 更新显示值
+            $('#roll-value').text(roll.toFixed(2));
+            $('#pitch-value').text(pitch.toFixed(2));
+            $('#yaw-value').text(yaw.toFixed(2));
+        }
+    }
+    
+    /**
+     * 切换手型（左手/右手）
+     */
+    function switchHand(handType) {
+        console.log(`DEBUG: Switching to ${handType} hand`);
+        
+        $('#loading-indicator').show().find('div').text(`切换到${handType === 'left' ? '左手' : '右手'}模型中...`);
+        
+        // 更新按钮状态
+        $('.hand-switch-btn').removeClass('active');
+        $(`#${handType}-hand-btn`).addClass('active');
+        
+        // 重新加载模型
+        setTimeout(() => {
+            window.Hand3DViewer.currentHandType = handType;
+            window.Hand3DViewer.loadHandModel(handType);
+        }, 100);
+    }
+    
+    /**
+     * 切换自动旋转
+     */
+    function toggleAutoRotate() {
+        window.Hand3DViewer.autoRotate = !window.Hand3DViewer.autoRotate;
+        const button = $('#auto-rotate-btn');
+        
+        if (window.Hand3DViewer.autoRotate) {
+            button.addClass('active').text('停止旋转');
+        } else {
+            button.removeClass('active').text('自动旋转');
+        }
+        
+        console.log(`DEBUG: Auto rotate ${window.Hand3DViewer.autoRotate ? 'enabled' : 'disabled'}`);
+    }
+    
+    /**
+     * 切换线框模式
+     */
+    function toggleWireframe() {
+        const currentModel = window.Hand3DViewer.currentModel;
+        if (!currentModel) return;
+        
+        let wireframeMode = false;
+        
+        currentModel.traverse(function(child) {
+            if (child.isMesh && child.material) {
+                child.material.wireframe = !child.material.wireframe;
+                wireframeMode = child.material.wireframe;
+            }
+        });
+        
+        const button = $('#wireframe-btn');
+        if (wireframeMode) {
+            button.addClass('active').text('实体模式');
+        } else {
+            button.removeClass('active').text('线框模式');
+        }
+        
+        console.log(`DEBUG: Wireframe mode ${wireframeMode ? 'enabled' : 'disabled'}`);
+    }
+    
+    /**
+     * 重置视角
+     */
+    function resetCamera() {
+        const camera = window.Hand3DViewer.camera;
+        const controls = window.Hand3DViewer.controls;
+        
+        if (camera && controls) {
+            camera.position.set(0, 0, 0);
+            camera.lookAt(0, 0, 1);
+            
+            controls.target.set(0, 0.1, 0);
+            controls.update();
+            
+            console.log("DEBUG: Camera reset to default position");
+        }
+    }
+    
+    /**
+     * 重置手部姿态
+     */
+    function resetHandPose() {
+        const initialPose = window.Hand3DViewer.getCurrentHandInitialPose();
+        
+        // 重置滑块值
+        $('#roll-slider').val(initialPose.rotation.roll);
+        $('#pitch-slider').val(initialPose.rotation.pitch);
+        $('#yaw-slider').val(initialPose.rotation.yaw);
+        
+        // 应用重置
+        updateHandPoseFromSliders();
+        
+        console.log("DEBUG: Hand pose reset to initial values");
+    }
+    
+    /**
+     * 设置关节角度（通过名称）
+     */
+    function setJointAngle(jointName, angle) {
+        const urdfLoader = window.Hand3DViewer.urdfLoader;
+        if (urdfLoader && urdfLoader.robot) {
+            try {
+                urdfLoader.setJointValue(jointName, angle);
+                console.log(`DEBUG: Set joint ${jointName} to ${angle}`);
+            } catch (e) {
+                console.warn(`Failed to set joint ${jointName}:`, e);
+            }
+        }
+    }
+    
+    /**
+     * 获取关节角度
+     */
+    function getJointAngle(jointName) {
+        const urdfLoader = window.Hand3DViewer.urdfLoader;
+        if (urdfLoader && urdfLoader.robot) {
+            try {
+                return urdfLoader.getJointValue(jointName);
+            } catch (e) {
+                console.warn(`Failed to get joint ${jointName}:`, e);
+                return 0;
+            }
+        }
+        return 0;
+    }
+    
+    /**
+     * 初始化控制事件
+     */
+    function initializeControls() {
+        // 姿态控制滑块事件
+        $('#roll-slider, #pitch-slider, #yaw-slider').on('input', updateHandPoseFromSliders);
+        
+        // 手型切换按钮
+        $('#left-hand-btn').on('click', () => switchHand('left'));
+        $('#right-hand-btn').on('click', () => switchHand('right'));
+        
+        // 功能按钮
+        $('#auto-rotate-btn').on('click', toggleAutoRotate);
+        $('#wireframe-btn').on('click', toggleWireframe);
+        $('#reset-camera-btn').on('click', resetCamera);
+        $('#reset-pose-btn').on('click', resetHandPose);
+        
+        console.log("DEBUG: Hand control events initialized");
+    }
+    
+    // 暴露给全局命名空间
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.updateHandPoseFromSliders = updateHandPoseFromSliders;
+    window.Hand3DViewer.switchHand = switchHand;
+    window.Hand3DViewer.toggleAutoRotate = toggleAutoRotate;
+    window.Hand3DViewer.toggleWireframe = toggleWireframe;
+    window.Hand3DViewer.resetCamera = resetCamera;
+    window.Hand3DViewer.resetHandPose = resetHandPose;
+    window.Hand3DViewer.setJointAngle = setJointAngle;
+    window.Hand3DViewer.getJointAngle = getJointAngle;
+    window.Hand3DViewer.initializeControls = initializeControls;
+    
+    console.log("DEBUG: Hand 3D Viewer controls module initialized");
+    
+})();
+</script>
+
+<!-- 3D场景管理模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - 3D Scene Management
+(function() {
+    "use strict";
+    
+    // 3D场景相关变量
+    let scene, camera, renderer, controls;
+    let currentModel = null;
+    let animationId = null;
+    
+    // 手部模型配置
+    const HAND_MODELS = {
+        left: {
+            name: "左手模型",
+            path: "/D6_LEFT_HAND/urdf/D6_LEFT_HAND.urdf",
+            workingPath: "/D6_LEFT_HAND/urdf/",
+            packages: { "D6_LEFT_HAND": "/D6_LEFT_HAND" }
+        },
+        right: {
+            name: "右手模型", 
+            path: "/D6_RIGHT_HAND/urdf/D6_RIGHT_HAND.urdf",
+            workingPath: "/D6_RIGHT_HAND/urdf/",
+            packages: { "D6_RIGHT_HAND": "/D6_RIGHT_HAND" }
+        }
+    };
+    
+    function initThreeJSScene() {
+        if (!window.Hand3DViewer.dependenciesLoaded) {
+            console.warn("DEBUG: Dependencies not loaded yet. Aborting scene init.");
+            $('#loading-indicator').show().find('div').text('正在加载依赖库...');
+            // 再次触发加载，以防万一
+            window.Hand3DViewer.loadDependencies(function(){
+                if ($('#hand-3d-container').is(':visible')) {
+                    initThreeJSScene(); // 加载完后重试
+                }
+            });
+            return;
+        }
+
+        const container = document.getElementById('hand-3d-container');
+        if (!container || !window.Hand3DViewer.isThreeJSLoaded()) {
+            console.log("DEBUG: Container not ready or Three.js not loaded");
+            return;
+        }
+        
+        $('#loading-indicator').hide();
+        
+        // 如果已经初始化过，清理旧的场景
+        if (renderer) {
+            container.removeChild(renderer.domElement);
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+        
+        // 创建场景（背景将由环境模块设置）
+        scene = new THREE.Scene();
+        
+        // 创建相机
+        const containerRect = container.getBoundingClientRect();
+        camera = new THREE.PerspectiveCamera(45, containerRect.width / containerRect.height, 0.1, 1000);
+        camera.position.set(0.3, 0.3, 0.3);
+        camera.lookAt(0, 0.05, 0); // 稍微向上看，聚焦在手掌中心区域
+        
+        // 创建渲染器（高质量设置将由environment模块配置）
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio || 1);
+        renderer.setSize(containerRect.width, containerRect.height);
+        container.appendChild(renderer.domElement);
+        
+        // 阻止浏览器默认的鼠标事件
+        const canvas = renderer.domElement;
+        canvas.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+        
+        canvas.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        canvas.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 添加轨道控制器
+        if (THREE.OrbitControls) {
+            controls = new THREE.OrbitControls(camera, canvas);
+            controls.target.set(0, 0.1, 0); // 将焦点设置在手掌中心区域（稍微向上）
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.enablePan = true; // 禁止平移
+            controls.enableZoom = true;
+            controls.enableRotate = true;
+            
+            // 关键：限制垂直旋转角度，防止拖到地面以下
+            const PI90 = Math.PI / 2;
+            controls.maxPolarAngle = PI90 - 0.05; // 几乎垂直但不能到地面以下
+            
+            // 设置距离范围
+            controls.minDistance = 0.2;
+            controls.maxDistance = 1.0;
+            
+            // 自定义鼠标按键映射
+            controls.mouseButtons = {
+                LEFT: THREE.MOUSE.ROTATE,
+                MIDDLE: THREE.MOUSE.DOLLY,
+                RIGHT: THREE.MOUSE.PAN
+            };
+            
+            // 触控设备支持
+            controls.touches = {
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN
+            };
+            
+            controls.update();
+        } else {
+            console.warn("OrbitControls not available, using basic camera");
+            RED.notify("OrbitControls 未加载，3D视图交互受限。", { type: "warning", timeout: 8000 });
+        }
+        
+        // 添加坐标轴和焦点可视化
+        addCoordinateSystem();
+        
+        // 添加环境增强效果
+        if (window.Hand3DViewer && window.Hand3DViewer.Environment) {
+            try {
+                window.Hand3DViewer.Environment.addVisualEffects(scene, renderer);
+                console.log("DEBUG: Visual effects added");
+            } catch (e) {
+                console.warn("Failed to add visual effects:", e);
+            }
+        } 
+        const defaultHand = window.Hand3DViewer.currentHandType || 'left';
+        loadHandModel(defaultHand);
+        
+        // 开始渲染循环
+        animate();
+        
+        // 处理窗口大小变化
+        window.addEventListener('resize', onWindowResize);
+    }
+    
+    // 添加坐标系统和焦点可视化
+    function addCoordinateSystem() {
+        // 添加世界坐标轴（原点坐标轴）
+        const worldAxesHelper = new THREE.AxesHelper(0.1);
+        worldAxesHelper.name = 'worldAxes';
+        scene.add(worldAxesHelper);
+        
+        // 添加OrbitControls焦点可视化
+        const focusPoint = controls ? controls.target.clone() : new THREE.Vector3(0, 0.05, 0);
+        
+        // 创建焦点球体标记
+        const focusGeometry = new THREE.SphereGeometry(0.005, 16, 16);
+        const focusMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xff0000, 
+            transparent: true, 
+            opacity: 0.8 
+        });
+        const focusSphere = new THREE.Mesh(focusGeometry, focusMaterial);
+        focusSphere.position.copy(focusPoint);
+        focusSphere.name = 'focusPoint';
+        scene.add(focusSphere);
+        
+        // 创建焦点坐标轴
+        const focusAxesHelper = new THREE.AxesHelper(0.05);
+        focusAxesHelper.position.copy(focusPoint);
+        focusAxesHelper.name = 'focusAxes';
+        scene.add(focusAxesHelper);
+        
+        // 添加文字标签（使用简单的几何体表示）
+        const labelGeometry = new THREE.RingGeometry(0.008, 0.012, 8);
+        const labelMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00ff00, 
+            transparent: true, 
+            opacity: 0.6,
+            side: THREE.DoubleSide 
+        });
+        const focusLabel = new THREE.Mesh(labelGeometry, labelMaterial);
+        focusLabel.position.copy(focusPoint);
+        focusLabel.position.y += 0.02;
+        focusLabel.name = 'focusLabel';
+        scene.add(focusLabel);
+        
+        console.log(`DEBUG: Coordinate system and focus visualization added at:`, focusPoint);
+        console.log(`DEBUG: World origin axes at (0,0,0), Focus point at (${focusPoint.x.toFixed(3)}, ${focusPoint.y.toFixed(3)}, ${focusPoint.z.toFixed(3)})`);
+    }
+    
+    // 更新焦点可视化
+    function updateFocusVisualization() {
+        if (!controls || !scene) return;
+        
+        const focusPoint = controls.target;
+        
+        // 更新焦点球体位置
+        const focusSphere = scene.getObjectByName('focusPoint');
+        if (focusSphere) {
+            focusSphere.position.copy(focusPoint);
+        }
+        
+        // 更新焦点坐标轴位置
+        const focusAxes = scene.getObjectByName('focusAxes');
+        if (focusAxes) {
+            focusAxes.position.copy(focusPoint);
+        }
+        
+        // 更新焦点标签位置
+        const focusLabel = scene.getObjectByName('focusLabel');
+        if (focusLabel) {
+            focusLabel.position.copy(focusPoint);
+            focusLabel.position.y += 0.02;
+        }
+        
+        console.log(`DEBUG: Focus visualization updated to (${focusPoint.x.toFixed(3)}, ${focusPoint.y.toFixed(3)}, ${focusPoint.z.toFixed(3)})`);
+    }
+    
+    function loadHandModel(handType = 'left') {
+        // 清除旧模型
+        if (currentModel) {
+            scene.remove(currentModel);
+            currentModel.traverse(child => {
+                if (child.isMesh) {
+                    child.geometry.dispose();
+                    if (child.material.isMaterial) {
+                        // 清理材质引用的纹理等
+                        Object.values(child.material).forEach(value => {
+                            if (value && typeof value.dispose === 'function') {
+                                value.dispose();
+                            }
+                        });
+                        child.material.dispose();
+                    }
+                }
+            });
+        }
+
+        $('#loading-indicator').show();
+        
+        const handConfig = HAND_MODELS[handType];
+        if (!handConfig) {
+            console.error("Invalid hand type:", handType);
+            return;
+        }
+
+        const loader = new URDFLoader();
+
+        loader.workingPath = handConfig.workingPath;
+        loader.packages = handConfig.packages;
+        
+        loader.load(
+            handConfig.path,
+            hand => {
+                console.log(`DEBUG: ${handConfig.name} loaded successfully`, hand);
+                
+                // 计算模型边界并调整位置
+                const box = new THREE.Box3().setFromObject(hand);
+                const center = box.getCenter(new THREE.Vector3());
+                
+                // 将手部模型定位，使手掌中心区域在合适的高度
+                hand.position.sub(center);
+                
+                // 动态调整控制器焦点到手掌中心区域
+                if (controls) {
+                    // 计算手掌中心的大致位置（通常在手部模型的中上部）
+                    const handPalmCenter = new THREE.Vector3(0, 0.1, 0);
+                    controls.target.copy(handPalmCenter);
+                    controls.update();
+                    // 更新焦点可视化
+                    updateFocusVisualization();
+                }
+                
+                // 启用阴影
+                hand.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        
+                        // 为手部模型设置更合适的材质
+                        if (child.material) {
+                            child.material.roughness = 0.4;
+                            child.material.metalness = 0.1;
+                        }
+                    }
+                });
+                
+                // 应用初始位置和姿态 - 根据手部类型获取相应的初始姿态
+                const initialPose = window.Hand3DViewer.getCurrentHandInitialPose();
+                
+                hand.position.set(
+                    initialPose.position.x,
+                    initialPose.position.y,
+                    initialPose.position.z
+                );
+                
+                hand.rotation.set(
+                    initialPose.rotation.roll,
+                    initialPose.rotation.pitch,
+                    initialPose.rotation.yaw,
+                    'XYZ'
+                );
+
+                scene.add(hand);
+                currentModel = hand;
+                
+                // 保存 loader 引用到模型和全局，供外部控制使用
+                try {
+                    hand.userData = hand.userData || {};
+                    hand.userData.urdfLoader = loader;
+                    window.Hand3DViewer.urdfLoader = loader;
+                } catch (e) {
+                    console.warn('Failed to attach urdfLoader to model/userData', e);
+                }
+                
+                // 同步滑块值与模型初始姿态
+                $('#roll-slider').val(initialPose.rotation.roll);
+                $('#pitch-slider').val(initialPose.rotation.pitch);
+                $('#yaw-slider').val(initialPose.rotation.yaw);
+                
+                // 调用更新函数设置模型的初始姿态和UI显示
+                if (window.Hand3DViewer.updateHandPoseFromSliders) {
+                    window.Hand3DViewer.updateHandPoseFromSliders();
+                }
+                                
+                $('#loading-indicator').hide();
+                $('#threejs-gui-panel').show();
+
+                // 更新UI显示当前手型
+                $('.hand-switch-btn').removeClass('active');
+                $(`#${handType}-hand-btn`).addClass('active');
+                
+                console.log(`DEBUG: ${handConfig.name} setup complete`);
+            },
+            progress => {
+                if (progress && progress.total > 0) {
+                    const percent = Math.round(progress.loaded / progress.total * 100);
+                    $('#loading-indicator div').text(`加载${handConfig.name}中... ${percent}%`);
+                } else {
+                    $('#loading-indicator div').text(`加载${handConfig.name}中...`);
+                }
+            },
+            error => {
+                console.error(`ERROR: Failed to load ${handConfig.name}.`, error);
+                RED.notify(`${handConfig.name}加载失败，请检查控制台和文件路径。`, { type: "error", timeout: 8000 });
+                $('#loading-indicator div').text('加载失败！');
+            }
+        );
+    }
+    
+    // 动画循环
+    function animate() {
+        animationId = requestAnimationFrame(animate);
+        
+        // 自动旋转
+        if (window.Hand3DViewer.autoRotate && currentModel) {
+            currentModel.rotation.z += 0.01;
+        }
+        
+        // 更新控制器
+        if (controls) {
+            controls.update();
+        }
+        
+        // 渲染场景
+        if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+        }
+    }
+    
+    // 窗口大小变化处理
+    function onWindowResize() {
+        const container = document.getElementById('hand-3d-container');
+        if (!container) {
+            console.warn('DEBUG: Container not found during resize');
+            return;
+        }
+        
+        if (!camera || !renderer) {
+            console.warn('DEBUG: Camera or renderer not available during resize');
+            return;
+        }
+
+        // 检查容器是否可见
+        if (!$(container).is(':visible')) {
+            console.log('DEBUG: Container not visible, skipping resize');
+            return;
+        }
+
+        const containerRect = container.getBoundingClientRect();
+        
+        // 防止高度或宽度为0（隐藏或未布局完成）导致的异常
+        const width = Math.max(1, Math.floor(containerRect.width));
+        const height = Math.max(1, Math.floor(containerRect.height));
+
+        // 如果尺寸太小，可能容器还没准备好
+        if (width < 10 || height < 10) {
+            console.log('DEBUG: Container too small, deferring resize');
+            setTimeout(onWindowResize, 100);
+            return;
+        }
+
+        try {
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+
+            // 同步 canvas 的样式尺寸和渲染器尺寸
+            const canvas = renderer.domElement;
+            if (canvas) {
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+            }
+
+            renderer.setPixelRatio(window.devicePixelRatio || 1);
+            renderer.setSize(width, height, false);
+
+            // 立即触发一次渲染
+            if (scene && camera) {
+                renderer.render(scene, camera);
+            }
+            
+            // 如果有控制器，也更新一下
+            if (controls) {
+                controls.update();
+            }
+        } catch (e) {
+            console.warn('DEBUG: Resize operation failed:', e);
+        }
+    }
+    
+    // 暴露给全局
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.initThreeJSScene = initThreeJSScene;
+    window.Hand3DViewer.loadHandModel = loadHandModel;
+    window.Hand3DViewer.onWindowResize = onWindowResize;
+    window.Hand3DViewer.updateFocusVisualization = updateFocusVisualization;
+    
+    // 只读属性
+    Object.defineProperty(window.Hand3DViewer, 'scene', {
+        get: function() { return scene; }
+    });
+    Object.defineProperty(window.Hand3DViewer, 'camera', {
+        get: function() { return camera; }
+    });
+    Object.defineProperty(window.Hand3DViewer, 'renderer', {
+        get: function() { return renderer; }
+    });
+    Object.defineProperty(window.Hand3DViewer, 'controls', {
+        get: function() { return controls; }
+    });
+    Object.defineProperty(window.Hand3DViewer, 'currentModel', {
+        get: function() { return currentModel; }
+    });
+    Object.defineProperty(window.Hand3DViewer, 'hand', {
+        get: function() { return currentModel; }
+    });
+
+})();
+</script>
+
+<!-- 侧边栏UI模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - Sidebar UI Module
+(function() {
+    "use strict";
+    
+    /**
+     * 创建侧边栏内容
+     */
+    function createSidebarContent() {
+        const sidebarContent = `
+            <div id="hand-3d-sidebar-content" style="height: 100%; display: flex; flex-direction: column;">
+                <!-- 标题栏 -->
+                <div style="padding: 10px; background-color: #2e3440; color: white; border-bottom: 1px solid #434c5e;">
+                    <h4 style="margin: 0; font-size: 14px;">
+                        <i class="fa fa-hand-o-up" style="margin-right: 5px;"></i>
+                        手部3D查看器
+                    </h4>
+                </div>
+                
+                <!-- 3D容器 -->
+                <div id="hand-3d-container" style="flex: 1; min-height: 300px; background-color: #3b4252; position: relative;">
+                    <!-- 加载指示器 -->
+                    <div id="loading-indicator" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; z-index: 1000;">
+                        <i class="fa fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <div>正在初始化3D查看器...</div>
+                    </div>
+                </div>
+                
+                <!-- 控制面板 -->
+                <div id="threejs-gui-panel" style="display: none; padding: 10px; background-color: #4c566a; color: white; border-top: 1px solid #5e81ac;">
+                    
+                    <!-- 手型切换 -->
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">手型选择:</div>
+                        <div style="display: flex; gap: 5px;">
+                            <button id="left-hand-btn" class="hand-switch-btn active" style="flex: 1; padding: 5px; background-color: #5e81ac; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">
+                                左手
+                            </button>
+                            <button id="right-hand-btn" class="hand-switch-btn" style="flex: 1; padding: 5px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">
+                                右手
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 姿态控制 -->
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">手部姿态:</div>
+                        
+                        <!-- Roll控制 -->
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                <span>Roll (X轴):</span>
+                                <span id="roll-value">0.00</span>
+                            </label>
+                            <input type="range" id="roll-slider" min="-3.14" max="3.14" step="0.01" value="0" 
+                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
+                        </div>
+                        
+                        <!-- Pitch控制 -->
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                <span>Pitch (Y轴):</span>
+                                <span id="pitch-value">0.00</span>
+                            </label>
+                            <input type="range" id="pitch-slider" min="-3.14" max="3.14" step="0.01" value="0" 
+                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
+                        </div>
+                        
+                        <!-- Yaw控制 -->
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                <span>Yaw (Z轴):</span>
+                                <span id="yaw-value">0.00</span>
+                            </label>
+                            <input type="range" id="yaw-slider" min="-3.14" max="3.14" step="0.01" value="0" 
+                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
+                        </div>
+                    </div>
+                    
+                    <!-- 功能按钮 -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">控制选项:</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px;">
+                            <button id="auto-rotate-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                自动旋转
+                            </button>
+                            <button id="wireframe-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                线框模式
+                            </button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                            <button id="reset-camera-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                重置视角
+                            </button>
+                            <button id="reset-pose-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
+                                重置姿态
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        return sidebarContent;
+    }
+    
+    /**
+     * 初始化侧边栏
+     */
+    function initSidebar() {
+        // 创建侧边栏标签页
+        const sidebarTab = {
+            id: "hand-3d-viewer",
+            label: "手部3D",
+            name: "手部3D查看器",
+            content: createSidebarContent(),
+            closeable: true,
+            visible: true,
+            icon: "fa fa-hand-o-up"
+        };
+        
+        // 添加到侧边栏
+        RED.sidebar.addTab(sidebarTab);
+        
+        // 激活标签页
+        RED.sidebar.show("hand-3d-viewer");
+        
+        console.log("DEBUG: Hand 3D Viewer sidebar initialized");
+    }
+    
+    /**
+     * 显示侧边栏
+     */
+    function showSidebar() {
+        RED.sidebar.show("hand-3d-viewer");
+        
+        // 延迟初始化3D场景，确保容器已渲染
+        setTimeout(() => {
+            const container = document.getElementById('hand-3d-container');
+            if (container && container.getBoundingClientRect().width > 0) {
+                window.Hand3DViewer.initThreeJSScene();
+            } else {
+                // 如果容器还未准备好，再等一会
+                setTimeout(() => {
+                    window.Hand3DViewer.initThreeJSScene();
+                }, 500);
+            }
+        }, 100);
+    }
+    
+    /**
+     * 隐藏侧边栏
+     */
+    function hideSidebar() {
+        // 这里可以暂停3D渲染以节省性能
+        console.log("DEBUG: Hand 3D Viewer sidebar hidden");
+    }
+    
+    /**
+     * 设置按钮样式
+     */
+    function updateButtonStyles() {
+        // 为激活状态的按钮添加样式
+        const activeButtons = $('.hand-switch-btn.active');
+        activeButtons.css({
+            'background-color': '#5e81ac',
+            'color': 'white'
+        });
+        
+        // 为非激活状态的按钮设置样式
+        $('.hand-switch-btn:not(.active)').css({
+            'background-color': '#434c5e',
+            'color': '#d8dee9'
+        });
+        
+        // 功能按钮的激活状态样式
+        $('.active[id$="-btn"]:not(.hand-switch-btn)').css({
+            'background-color': '#88c0d0',
+            'color': '#2e3440'
+        });
+    }
+    
+    // 监听侧边栏事件
+    RED.events.on("sidebar:resize", function() {
+        // 当侧边栏大小改变时，重新调整3D视图
+        setTimeout(() => {
+            if (window.Hand3DViewer.onWindowResize) {
+                window.Hand3DViewer.onWindowResize();
+            }
+        }, 100);
+    });
+    
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.initSidebar = initSidebar;
+    window.Hand3DViewer.showSidebar = showSidebar;
+    window.Hand3DViewer.hideSidebar = hideSidebar;
+    window.Hand3DViewer.updateButtonStyles = updateButtonStyles;
+    
+    console.log("DEBUG: Hand 3D Viewer sidebar module initialized");
+    
+})();
+</script>
+
+<!-- 主入口模块 -->
+<script type="text/javascript">
+// Hand 3D Viewer - Main Entry Point
+(function() {
+    "use strict";
+    
+    // 全局初始化标志
+    let initialized = false;
+    
+    function initialize() {
+        if (initialized) {
+            console.log("DEBUG: Hand 3D Viewer already initialized");
+            return;
+        }
+        
+        try {
+            // 设置默认配置
+            window.Hand3DViewer = window.Hand3DViewer || {};
+            window.Hand3DViewer.currentHandType = 'left'; // 默认显示左手
+            
+            // 初始化侧边栏
+            window.Hand3DViewer.initSidebar();
+            
+            // 加载依赖库
+            window.Hand3DViewer.loadDependencies(function() {
+                console.log("DEBUG: Dependencies loaded, setting up controls...");
+                
+                // 延迟初始化控制事件，确保DOM已准备好
+                setTimeout(() => {
+                    if (window.Hand3DViewer.initializeControls) {
+                        window.Hand3DViewer.initializeControls();
+                    }
+                    
+                    // 更新按钮样式
+                    if (window.Hand3DViewer.updateButtonStyles) {
+                        window.Hand3DViewer.updateButtonStyles();
+                    }
+                }, 200);
+            });
+            
+            // 显示侧边栏并初始化3D场景
+            window.Hand3DViewer.showSidebar();
+            
+            initialized = true;
+            console.log("DEBUG: Hand 3D Viewer initialization complete");
+            
+        } catch (error) {
+            console.error("ERROR: Failed to initialize Hand 3D Viewer:", error);
+            RED.notify("手部3D查看器初始化失败", { type: "error", timeout: 5000 });
+        }
+    }
+    
+    /**
+     * 获取关节信息（为了与robot-3d-viewer兼容）
+     */
+    function getJointInfo() {
+        const urdfLoader = window.Hand3DViewer.urdfLoader;
+        if (urdfLoader && urdfLoader.robot) {
+            const joints = {};
+            urdfLoader.robot.traverse(function(child) {
+                if (child.isURDFJoint) {
+                    joints[child.name] = {
+                        name: child.name,
+                        type: child.jointType,
+                        axis: child.axis,
+                        limit: child.limit
+                    };
+                }
+            });
+            return joints;
+        }
+        return {};
+    }
+    
+    /**
+     * 设置多个关节角度（批量操作）
+     */
+    function setJointAngles(jointAngles) {
+        if (typeof jointAngles !== 'object') {
+            console.warn("setJointAngles expects an object with joint names as keys");
+            return;
+        }
+        
+        Object.keys(jointAngles).forEach(jointName => {
+            const angle = jointAngles[jointName];
+            if (typeof angle === 'number') {
+                window.Hand3DViewer.setJointAngle(jointName, angle);
+            }
+        });
+    }
+    
+    /**
+     * 获取所有关节角度
+     */
+    function getAllJointAngles() {
+        const jointInfo = getJointInfo();
+        const angles = {};
+        
+        Object.keys(jointInfo).forEach(jointName => {
+            angles[jointName] = window.Hand3DViewer.getJointAngle(jointName);
+        });
+        
+        return angles;
+    }
+    
+    /**
+     * 重置所有关节到初始位置
+     */
+    function resetAllJoints() {
+        const jointInfo = getJointInfo();
+        
+        Object.keys(jointInfo).forEach(jointName => {
+            window.Hand3DViewer.setJointAngle(jointName, 0);
+        });
+        
+        // 同时重置手部整体姿态
+        if (window.Hand3DViewer.resetHandPose) {
+            window.Hand3DViewer.resetHandPose();
+        }
+    }
+    
+    window.Hand3DViewer = window.Hand3DViewer || {};
+    window.Hand3DViewer.initialize = initialize;
+    window.Hand3DViewer.getJointInfo = getJointInfo;
+    window.Hand3DViewer.setJointAngles = setJointAngles;
+    window.Hand3DViewer.getAllJointAngles = getAllJointAngles;
+    window.Hand3DViewer.resetAllJoints = resetAllJoints;
+    
+    // 自动初始化（当DOM准备好时）
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+        // DOM已经准备好，直接初始化
+        setTimeout(initialize, 100);
+    }
+    
+    console.log("DEBUG: Hand 3D Viewer main module loaded");
+    
+})();
+</script>
