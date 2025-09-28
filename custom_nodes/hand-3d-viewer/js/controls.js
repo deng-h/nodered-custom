@@ -237,7 +237,44 @@
         $(document).off('click', '#reset-camera-btn').on('click', '#reset-camera-btn', resetCamera);
         $(document).off('click', '#reset-pose-btn').on('click', '#reset-pose-btn', resetHandPose);
         
-        console.log("DEBUG: Hand control events initialized");
+        // 手势控制按钮事件（使用事件代理）
+        $(document).off('click', '#rock-gesture-btn').on('click', '#rock-gesture-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.applyGesture('rock');
+            }
+        });
+        
+        $(document).off('click', '#paper-gesture-btn').on('click', '#paper-gesture-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.applyGesture('paper');
+            }
+        });
+        
+        $(document).off('click', '#scissors-gesture-btn').on('click', '#scissors-gesture-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.applyGesture('scissors');
+            }
+        });
+        
+        $(document).off('click', '#natural-pose-btn').on('click', '#natural-pose-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.resetToNaturalPose();
+            }
+        });
+        
+        $(document).off('click', '#random-gesture-btn').on('click', '#random-gesture-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.randomGesture();
+            }
+        });
+        
+        $(document).off('click', '#demo-gestures-btn').on('click', '#demo-gestures-btn', function() {
+            if (window.Hand3DViewer.Gestures) {
+                window.Hand3DViewer.Gestures.demonstrateGestures();
+            }
+        });
+        
+        console.log("DEBUG: Hand control events initialized with gesture controls");
     }
     
     // 暴露给全局命名空间

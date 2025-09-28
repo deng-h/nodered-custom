@@ -23,6 +23,7 @@ class Hand3DViewerBuilder {
             'controls.js',
             'scene.js',
             'sidebar.js',
+            'gestures.js',
             'main.js'
         ];
     }
@@ -122,6 +123,7 @@ ${css}
             'controls.js': '控制和事件模块',
             'scene.js': '3D场景管理模块',
             'sidebar.js': '侧边栏UI模块',
+            'gestures.js': '手势控制模块',
             'main.js': '主入口模块'
         };
         
@@ -137,8 +139,43 @@ ${jsModules[moduleName]}
             }
         }
         
-        // 将CSS和JS插入到HTML中
-        html = html + cssSection + jsSection;
+        // 添加Node-RED节点注册代码
+        const nodeRegistration = `
+<!-- Node-RED节点注册 -->
+<script type="text/javascript">
+    RED.nodes.registerType('hand-3d-viewer', {
+        category: '3D查看器',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value: ""},
+            defaultHand: {value: "left"}
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "font-awesome/fa-hand-o-up",
+        label: function() {
+            return this.name || "手部3D查看器";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function() {
+            // 当编辑对话框准备好时的初始化代码
+            console.log("DEBUG: Hand 3D Viewer node edit dialog prepared");
+        },
+        oneditsave: function() {
+            // 保存配置时的处理
+            console.log("DEBUG: Hand 3D Viewer node configuration saved");
+        },
+        oneditcancel: function() {
+            // 取消编辑时的处理
+            console.log("DEBUG: Hand 3D Viewer node edit cancelled");
+        }
+    });
+</script>`;
+        
+        // 将CSS、JS和Node-RED注册代码插入到HTML中
+        html = html + cssSection + jsSection + nodeRegistration;
         
         return html;
     }

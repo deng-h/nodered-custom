@@ -397,3 +397,50 @@
     border: 1px solid #88c0d0 !important;
     box-shadow: 0 0 8px rgba(136, 192, 208, 0.3) !important;
 }
+
+/* 手势按钮特殊样式 */
+.gui-button[id$="-gesture-btn"] {
+    font-size: 12px;
+    padding: 4px 6px;
+    min-height: 24px;
+    transition: all 0.2s ease;
+}
+
+.gui-button[id$="-gesture-btn"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.gui-button[id$="-gesture-btn"]:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* 特殊功能按钮样式 */
+#natural-pose-btn {
+    background: linear-gradient(to bottom, #a3be8c 0%, #8c9a6b 100%);
+    border-color: #8c9a6b;
+}
+
+#natural-pose-btn:hover {
+    background: linear-gradient(to bottom, #b3ce9c 0%, #9caa7b 100%);
+}
+
+#random-gesture-btn {
+    background: linear-gradient(to bottom, #d08770 0%, #bf7860 100%);
+    border-color: #bf7860;
+}
+
+#random-gesture-btn:hover {
+    background: linear-gradient(to bottom, #e09780 0%, #cf8870 100%);
+}
+
+#demo-gestures-btn {
+    background: linear-gradient(to bottom, #b48ead 0%, #a47ba0 100%);
+    border-color: #a47ba0;
+    font-weight: bold;
+}
+
+#demo-gestures-btn:hover {
+    background: linear-gradient(to bottom, #c49ebd 0%, #b48bb0 100%);
+}

@@ -62,6 +62,29 @@
                             </div>
                         </div>
                         
+                        <!-- Gesture Controls -->
+                        <div class="gui-folder">
+                            <div class="gui-folder-title" data-target="gui-gesture-controls">手势控制 🎮</div>
+                            <div class="gui-folder-content collapsed" id="gui-gesture-controls">
+                                <div class="gui-controller">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+                                        <button id="rock-gesture-btn" class="gui-button" title="石头手势">✊ 石头</button>
+                                        <button id="paper-gesture-btn" class="gui-button" title="布手势">✋ 布</button>
+                                        <button id="scissors-gesture-btn" class="gui-button" title="剪刀手势">✌️ 剪刀</button>
+                                    </div>
+                                </div>
+                                <div class="gui-controller">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                                        <button id="natural-pose-btn" class="gui-button" title="自然姿态">🖐️ 自然</button>
+                                        <button id="random-gesture-btn" class="gui-button" title="随机手势">🎲 随机</button>
+                                    </div>
+                                </div>
+                                <div class="gui-controller">
+                                    <button id="demo-gestures-btn" class="gui-button" title="演示所有手势" style="width: 100%;">🎭 演示手势</button>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- View Controls -->
                         <div class="gui-folder">
                             <div class="gui-folder-title" data-target="gui-view-controls">视图控制</div>
