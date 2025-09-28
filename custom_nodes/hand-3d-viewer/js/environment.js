@@ -3,27 +3,26 @@
     "use strict";
     
     /**
-     * 设置高质量渲染
+     * 设置高质量渲染（无阴影版本）
      */
     function setupHighQualityRendering(renderer) {
         if (!renderer) return;
         
-        // 启用物理正确的光照
-        renderer.physicallyCorrectLights = true;
+        // 禁用物理正确的光照，避免过度真实的阴影效果
+        renderer.physicallyCorrectLights = false;
         
-        // 启用阴影
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.shadowMap.autoUpdate = true;
+        // 完全禁用阴影
+        renderer.shadowMap.enabled = false;
+        renderer.shadowMap.autoUpdate = false;
         
         // 设置色调映射
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.0;
+        renderer.toneMappingExposure = 0.4;
         
         // 设置色彩空间
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         
-        console.log("DEBUG: High quality rendering configured");
+        console.log("DEBUG: High quality rendering configured (shadows disabled)");
     }
     
     /**
@@ -51,7 +50,7 @@
     }
     
     /**
-     * 添加专业级光照
+     * 添加无阴影的均匀光照
      */
     function setupProfessionalLighting(scene) {
         if (!scene) return;
@@ -65,38 +64,34 @@
         });
         lights.forEach(light => scene.remove(light));
         
-        // 主光源 - 模拟太阳光
-        const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        mainLight.position.set(10, 10, 5);
-        mainLight.target.position.set(0, 0, 0);
-        
-        // 配置阴影
-        mainLight.castShadow = true;
-        mainLight.shadow.mapSize.width = 2048;
-        mainLight.shadow.mapSize.height = 2048;
-        mainLight.shadow.camera.near = 0.1;
-        mainLight.shadow.camera.far = 50;
-        mainLight.shadow.camera.left = -10;
-        mainLight.shadow.camera.right = 10;
-        mainLight.shadow.camera.top = 10;
-        mainLight.shadow.camera.bottom = -10;
-        
-        scene.add(mainLight);
-        scene.add(mainLight.target);
-        
-        // 补光 - 从侧面照亮
-        const fillLight = new THREE.DirectionalLight(0x87ceeb, 0.4);
-        fillLight.position.set(-5, 3, 5);
-        scene.add(fillLight);
-        
-        // 环境光 - 提供基础照明
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+        // 强环境光 - 提供基础均匀照明
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
         
-        // 顶部柔光
-        const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        topLight.position.set(0, 10, 0);
-        scene.add(topLight);
+        // 多方向柔光 - 从各个方向照亮，不产生阴影
+        const lightPositions = [
+            [5, 5, 5],   // 右上前
+            [-5, 5, 5],  // 左上前
+            [5, 5, -5],  // 右上后
+            [-5, 5, -5], // 左上后
+            [5, -2, 0],  // 右下
+            [-5, -2, 0], // 左下
+            [0, 5, 0],   // 正上
+            [0, -2, 5],  // 正下前
+        ];
+        
+        lightPositions.forEach((position, index) => {
+            const light = new THREE.DirectionalLight(0xffffff, 0.15);
+            light.position.set(position[0], position[1], position[2]);
+            light.castShadow = false; // 明确禁用阴影
+            scene.add(light);
+        });
+        
+        // 添加半球光 - 模拟天空和地面的反射
+        const hemisphereLight = new THREE.HemisphereLight(0x87ceeb, 0x444444, 0.3);
+        scene.add(hemisphereLight);
+        
+        console.log("DEBUG: Shadow-free lighting setup completed");
     }
     
     /**

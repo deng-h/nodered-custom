@@ -48,23 +48,19 @@
     }
     
     /**
-     * 切换自动旋转
+     * 切换自动旋转（兼容性函数）
      */
     function toggleAutoRotate() {
         window.Hand3DViewer.autoRotate = !window.Hand3DViewer.autoRotate;
-        const button = $('#auto-rotate-btn');
-        
-        if (window.Hand3DViewer.autoRotate) {
-            button.addClass('active').text('停止旋转');
-        } else {
-            button.removeClass('active').text('自动旋转');
+        const checkbox = $('#auto-rotate-checkbox');
+        if (checkbox.length) {
+            checkbox.prop('checked', window.Hand3DViewer.autoRotate);
         }
-        
         console.log(`DEBUG: Auto rotate ${window.Hand3DViewer.autoRotate ? 'enabled' : 'disabled'}`);
     }
     
     /**
-     * 切换线框模式
+     * 切换线框模式（兼容性函数）
      */
     function toggleWireframe() {
         const currentModel = window.Hand3DViewer.currentModel;
@@ -79,11 +75,9 @@
             }
         });
         
-        const button = $('#wireframe-btn');
-        if (wireframeMode) {
-            button.addClass('active').text('实体模式');
-        } else {
-            button.removeClass('active').text('线框模式');
+        const checkbox = $('#wireframe-checkbox');
+        if (checkbox.length) {
+            checkbox.prop('checked', wireframeMode);
         }
         
         console.log(`DEBUG: Wireframe mode ${wireframeMode ? 'enabled' : 'disabled'}`);
@@ -156,21 +150,92 @@
     }
     
     /**
+     * 切换GUI文件夹展开/收起状态
+     */
+    function toggleGuiFolder(targetId) {
+        const content = $(`#${targetId}`);
+        if (content.length) {
+            content.toggleClass('collapsed');
+        }
+    }
+    
+    /**
+     * 切换主GUI面板展开/收起状态
+     */
+    function toggleMainGui() {
+        console.log("DEBUG: toggleMainGui called");
+        const content = $('#gui-main-content');
+        const icon = $('.gui-toggle-icon');
+        
+        if (content.length && icon.length) {
+            content.toggleClass('collapsed');
+            
+            // 更新箭头方向
+            if (content.hasClass('collapsed')) {
+                icon.text('▶');
+                console.log("DEBUG: GUI collapsed");
+            } else {
+                icon.text('▼');
+                console.log("DEBUG: GUI expanded");
+            }
+        } else {
+            console.warn("DEBUG: GUI elements not found", {
+                content: content.length,
+                icon: icon.length
+            });
+        }
+    }
+    
+    /**
      * 初始化控制事件
      */
     function initializeControls() {
-        // 姿态控制滑块事件
-        $('#roll-slider, #pitch-slider, #yaw-slider').on('input', updateHandPoseFromSliders);
+        console.log("DEBUG: Initializing controls...");
         
-        // 手型切换按钮
-        $('#left-hand-btn').on('click', () => switchHand('left'));
-        $('#right-hand-btn').on('click', () => switchHand('right'));
+        // 使用事件代理确保事件能正确绑定
+        $(document).off('click', '#gui-main-toggle').on('click', '#gui-main-toggle', function() {
+            console.log("DEBUG: Main toggle clicked");
+            toggleMainGui();
+        });
         
-        // 功能按钮
-        $('#auto-rotate-btn').on('click', toggleAutoRotate);
-        $('#wireframe-btn').on('click', toggleWireframe);
-        $('#reset-camera-btn').on('click', resetCamera);
-        $('#reset-pose-btn').on('click', resetHandPose);
+        // GUI文件夹折叠控制
+        $(document).off('click', '.gui-folder-title').on('click', '.gui-folder-title', function() {
+            const target = $(this).data('target');
+            console.log("DEBUG: Folder toggle clicked:", target);
+            if (target) {
+                toggleGuiFolder(target);
+            }
+        });
+        
+        // 姿态控制滑块事件（使用事件代理）
+        $(document).off('input', '#roll-slider, #pitch-slider, #yaw-slider').on('input', '#roll-slider, #pitch-slider, #yaw-slider', updateHandPoseFromSliders);
+        
+        // 手型切换按钮（使用事件代理）
+        $(document).off('click', '#left-hand-btn').on('click', '#left-hand-btn', () => switchHand('left'));
+        $(document).off('click', '#right-hand-btn').on('click', '#right-hand-btn', () => switchHand('right'));
+        
+        // 功能按钮 - checkbox事件（使用事件代理）
+        $(document).off('change', '#auto-rotate-checkbox').on('change', '#auto-rotate-checkbox', function() {
+            window.Hand3DViewer.autoRotate = this.checked;
+            console.log(`DEBUG: Auto rotate ${window.Hand3DViewer.autoRotate ? 'enabled' : 'disabled'}`);
+        });
+        
+        $(document).off('change', '#wireframe-checkbox').on('change', '#wireframe-checkbox', function() {
+            const currentModel = window.Hand3DViewer.currentModel;
+            if (!currentModel) return;
+            
+            const isWireframe = this.checked;
+            currentModel.traverse(function(child) {
+                if (child.isMesh && child.material) {
+                    child.material.wireframe = isWireframe;
+                }
+            });
+            
+            console.log(`DEBUG: Wireframe mode ${isWireframe ? 'enabled' : 'disabled'}`);
+        });
+        
+        $(document).off('click', '#reset-camera-btn').on('click', '#reset-camera-btn', resetCamera);
+        $(document).off('click', '#reset-pose-btn').on('click', '#reset-pose-btn', resetHandPose);
         
         console.log("DEBUG: Hand control events initialized");
     }
@@ -185,6 +250,8 @@
     window.Hand3DViewer.resetHandPose = resetHandPose;
     window.Hand3DViewer.setJointAngle = setJointAngle;
     window.Hand3DViewer.getJointAngle = getJointAngle;
+    window.Hand3DViewer.toggleGuiFolder = toggleGuiFolder;
+    window.Hand3DViewer.toggleMainGui = toggleMainGui;
     window.Hand3DViewer.initializeControls = initializeControls;
     
     console.log("DEBUG: Hand 3D Viewer controls module initialized");

@@ -8,14 +8,6 @@
     function createSidebarContent() {
         const sidebarContent = `
             <div id="hand-3d-sidebar-content" style="height: 100%; display: flex; flex-direction: column;">
-                <!-- 标题栏 -->
-                <div style="padding: 10px; background-color: #2e3440; color: white; border-bottom: 1px solid #434c5e;">
-                    <h4 style="margin: 0; font-size: 14px;">
-                        <i class="fa fa-hand-o-up" style="margin-right: 5px;"></i>
-                        手部3D查看器
-                    </h4>
-                </div>
-                
                 <!-- 3D容器 -->
                 <div id="hand-3d-container" style="flex: 1; min-height: 300px; background-color: #3b4252; position: relative;">
                     <!-- 加载指示器 -->
@@ -25,75 +17,68 @@
                     </div>
                 </div>
                 
-                <!-- 控制面板 -->
-                <div id="threejs-gui-panel" style="display: none; padding: 10px; background-color: #4c566a; color: white; border-top: 1px solid #5e81ac;">
-                    
-                    <!-- 手型切换 -->
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">手型选择:</div>
-                        <div style="display: flex; gap: 5px;">
-                            <button id="left-hand-btn" class="hand-switch-btn active" style="flex: 1; padding: 5px; background-color: #5e81ac; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">
-                                左手
-                            </button>
-                            <button id="right-hand-btn" class="hand-switch-btn" style="flex: 1; padding: 5px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">
-                                右手
-                            </button>
-                        </div>
+                <!-- Three.js 风格的右上角GUI设置面板 -->
+                <div id="threejs-gui-panel" style="position: absolute; top: 10px; right: 10px; width: 240px; font-family: 'Lucida Grande', sans-serif; font-size: 11px; z-index: 1000; display: none;">
+                    <!-- 主控制折叠按钮 -->
+                    <div class="gui-main-header" id="gui-main-toggle">
+                        <span>手部设置</span>
+                        <span class="gui-toggle-icon">▶</span>
                     </div>
                     
-                    <!-- 姿态控制 -->
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">手部姿态:</div>
-                        
-                        <!-- Roll控制 -->
-                        <div style="margin-bottom: 8px;">
-                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                <span>Roll (X轴):</span>
-                                <span id="roll-value">0.00</span>
-                            </label>
-                            <input type="range" id="roll-slider" min="-3.14" max="3.14" step="0.01" value="0" 
-                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
+                    <!-- 主内容区域（默认折叠） -->
+                    <div id="gui-main-content" class="gui-main-content collapsed">
+                        <!-- Hand Selection -->
+                        <div class="gui-folder">
+                            <div class="gui-folder-title" data-target="gui-hand-selection">手型选择</div>
+                            <div class="gui-folder-content collapsed" id="gui-hand-selection">
+                                <div class="gui-controller">
+                                    <div style="display: flex; gap: 5px; width: 100%;">
+                                        <button id="left-hand-btn" class="gui-button hand-switch-btn active" style="flex: 1;">左手</button>
+                                        <button id="right-hand-btn" class="gui-button hand-switch-btn" style="flex: 1;">右手</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <!-- Pitch控制 -->
-                        <div style="margin-bottom: 8px;">
-                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                <span>Pitch (Y轴):</span>
-                                <span id="pitch-value">0.00</span>
-                            </label>
-                            <input type="range" id="pitch-slider" min="-3.14" max="3.14" step="0.01" value="0" 
-                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
+                        <!-- Pose Controls -->
+                        <div class="gui-folder">
+                            <div class="gui-folder-title" data-target="gui-pose-controls">手部姿态</div>
+                            <div class="gui-folder-content collapsed" id="gui-pose-controls">
+                                <div class="gui-controller gui-slider-container">
+                                    <label class="gui-label">Roll (X)</label>
+                                    <input type="range" id="roll-slider" min="-3.14" max="3.14" step="0.01" value="0" class="gui-slider">
+                                    <span class="gui-value" id="roll-value">0.00</span>
+                                </div>
+                                <div class="gui-controller gui-slider-container">
+                                    <label class="gui-label">Pitch (Y)</label>
+                                    <input type="range" id="pitch-slider" min="-3.14" max="3.14" step="0.01" value="0" class="gui-slider">
+                                    <span class="gui-value" id="pitch-value">0.00</span>
+                                </div>
+                                <div class="gui-controller gui-slider-container">
+                                    <label class="gui-label">Yaw (Z)</label>
+                                    <input type="range" id="yaw-slider" min="-3.14" max="3.14" step="0.01" value="0" class="gui-slider">
+                                    <span class="gui-value" id="yaw-value">0.00</span>
+                                </div>
+                            </div>
                         </div>
                         
-                        <!-- Yaw控制 -->
-                        <div style="margin-bottom: 8px;">
-                            <label style="font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                <span>Yaw (Z轴):</span>
-                                <span id="yaw-value">0.00</span>
-                            </label>
-                            <input type="range" id="yaw-slider" min="-3.14" max="3.14" step="0.01" value="0" 
-                                   style="width: 100%; height: 6px; background-color: #3b4252; outline: none;">
-                        </div>
-                    </div>
-                    
-                    <!-- 功能按钮 -->
-                    <div style="margin-bottom: 10px;">
-                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px;">控制选项:</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 8px;">
-                            <button id="auto-rotate-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
-                                自动旋转
-                            </button>
-                            <button id="wireframe-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
-                                线框模式
-                            </button>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                            <button id="reset-camera-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
-                                重置视角
-                            </button>
-                            <button id="reset-pose-btn" style="padding: 4px; background-color: #434c5e; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">
-                                重置姿态
-                            </button>
+                        <!-- View Controls -->
+                        <div class="gui-folder">
+                            <div class="gui-folder-title" data-target="gui-view-controls">视图控制</div>
+                            <div class="gui-folder-content collapsed" id="gui-view-controls">
+                                <div class="gui-controller">
+                                    <label><input type="checkbox" id="auto-rotate-checkbox"> 自动旋转</label>
+                                </div>
+                                <div class="gui-controller">
+                                    <label><input type="checkbox" id="wireframe-checkbox"> 线框模式</label>
+                                </div>
+                                <div class="gui-controller">
+                                    <button id="reset-camera-btn" class="gui-button">重置视角</button>
+                                </div>
+                                <div class="gui-controller">
+                                    <button id="reset-pose-btn" class="gui-button">重置姿态</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

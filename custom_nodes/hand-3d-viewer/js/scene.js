@@ -273,16 +273,18 @@
                     updateFocusVisualization();
                 }
                 
-                // 启用阴影
+                // 配置材质（禁用阴影）
                 hand.traverse(function(child) {
                     if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
+                        child.castShadow = false;  // 不产生阴影
+                        child.receiveShadow = false; // 不接收阴影
                         
                         // 为手部模型设置更合适的材质
                         if (child.material) {
-                            child.material.roughness = 0.4;
-                            child.material.metalness = 0.1;
+                            child.material.roughness = 0.3;
+                            child.material.metalness = 0.05;
+                            // 确保材质不会产生过度的阴影效果
+                            child.material.flatShading = false;
                         }
                     }
                 });
@@ -331,6 +333,13 @@
                 // 更新UI显示当前手型
                 $('.hand-switch-btn').removeClass('active');
                 $(`#${handType}-hand-btn`).addClass('active');
+                
+                // 确保控制事件已绑定
+                setTimeout(() => {
+                    if (window.Hand3DViewer.initializeControls) {
+                        window.Hand3DViewer.initializeControls();
+                    }
+                }, 100);
                 
                 console.log(`DEBUG: ${handConfig.name} setup complete`);
             },
