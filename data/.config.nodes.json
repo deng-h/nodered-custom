@@ -426,24 +426,5 @@
                 "file": "D:\\myCode\\13-nodered-dev\\packages\\node_modules\\@node-red\\nodes\\core\\storage\\23-watch.js"
             }
         }
-    },
-    "node-red-contrib-hand-3d-viewer": {
-        "name": "node-red-contrib-hand-3d-viewer",
-        "version": "0.1.0",
-        "local": false,
-        "user": false,
-        "nodes": {
-            "hand-3d-viewer": {
-                "name": "hand-3d-viewer",
-                "types": [
-                    "hand-3d-viewer"
-                ],
-                "enabled": true,
-                "local": false,
-                "user": false,
-                "module": "node-red-contrib-hand-3d-viewer",
-                "file": "D:\\myCode\\13-nodered-dev\\node_modules\\node-red-contrib-hand-3d-viewer\\hand-3d-viewer.js"
-            }
-        }
     }
 }

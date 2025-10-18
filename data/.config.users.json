@@ -17,6 +17,8 @@
             }
         },
         "menu-menu-item-palette": true,
-        "menu-menu-item-sidebar": true
+        "menu-menu-item-sidebar": true,
+        "menu-deploymenu-item-node": false,
+        "menu-deploymenu-item-full": true
     }
 }
